@@ -1,8 +1,7 @@
 __author__ = 'no_game'
 
 from pico2d import *
-
-import random
+from class_folder.canvas_property import *
 
 class Boy:
     PIXEL_PER_METER = (10.0 / 0.3)           # 10 pixel 30 cm
@@ -44,16 +43,18 @@ class Boy:
         self.jump_prev_y = self.y
         self.jump_prev_state = 0
 
-        #보이 이미지
+        #보이 이미지 변수
+        self.draw_x, self.draw_y = self.x, self.y
         if Boy.image == None:
             Boy.image = load_image('image_folder//character_sprite.png')
 
     def update(self, frame_time):
         self._set_pos(frame_time)
         self._set_frame(frame_time)
-        self._canvas_crush()
         if(self.jump_dir != 0):
             self._jump()
+
+        self._canvas_crush()
 
     def _set_frame(self, frame_time):
         if (self.x_dir == 0 and (self.state == self.RIGHT_STAND or self.state == self.LEFT_STAND)):  #멈췃을때 이미지 스프라이트가 없어서 편법 사용
@@ -72,10 +73,25 @@ class Boy:
         self.x += (self.x_dir * distance)
         self.y += (self.y_dir * distance)
 
+        if(self.x < canvas_width /2 and self.x < canvas_width/2):
+            self.draw_x = self.x
+        elif(canvas_width /2<= self.x  and self.x < (backgraound_width - canvas_width)):
+            self.draw_x = canvas_width/2
+        elif(self.x >=  (backgraound_width - canvas_width)):
+            self.draw_x = self.x - (backgraound_width - canvas_width) + canvas_width/2
+
+        if (self.y < canvas_height/2):
+            self.draw_y = self.y
+        elif(self.y >=  canvas_height/2 and self.y < (backgraound_height - canvas_height)):
+            self.draw_y = canvas_height/2
+        elif(self.y >=  (backgraound_height - canvas_height)):
+            self.draw_y = self.y - (backgraound_height - canvas_height) + canvas_height/2
+
     def _canvas_crush(self):
-        if self.x > 800:
-            self.x = 800
-        elif self.x < 0:
+        if self.draw_x > canvas_width:
+            self.draw_x = canvas_width
+            self.x = self.draw_x + (backgraound_width - canvas_width) - canvas_width/2
+        elif self.draw_x < 0:
             self.x = 0
 
     def _jump(self):
@@ -101,7 +117,7 @@ class Boy:
         self.y_dir = self.jump_dir
 
     def draw(self):
-        self.image.clip_draw((self.frame) * 100, self.state * 100, 100, 100, self.x, self.y)
+        self.image.clip_draw((self.frame) * 100, self.state * 100, 100, 100, self.draw_x, self.draw_y)
 
     def handle_event(self, event):
 
@@ -133,7 +149,6 @@ class Boy:
         elif (event.type, event.key) == (SDL_KEYUP, SDLK_DOWN):
             if self.state in (self.RIGHT_LIE, self.LEFT_LIE):
                 self._handle_rise()
-
 
     def _handle_right_run(self):
         self.x_dir = 1;

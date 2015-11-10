@@ -5,9 +5,13 @@ import game_framework
 import title_state
 
 import class_folder.Boy
+import class_folder.Background
+import class_folder.rupin
 
-boy = None
+
 background = None
+boy = None
+rupin = None
 running = True
 frame_time = 0
 
@@ -15,13 +19,19 @@ def enter():
     # fill here
     global background
     global boy
-    background = class_folder.B
+    global rupin
+    background = class_folder.Background.Background()
     boy = class_folder.Boy.Boy()
-    background.center_object(boy)
+    rupin = class_folder.rupin.Lupin()
+    background.set_senter(boy)
 
 def exit():
+    global background
     global boy
+    global rupin
+    del(background)
     del(boy)
+    del(rupin)
     close_canvas()
     game_framework.pop_state()
 
@@ -51,6 +61,7 @@ def update(frame_time):
     frame_time+=0.01
     background.update(frame_time)
     boy.update(frame_time)
+    rupin.update(frame_time)
     delay(0.01);
 
 def draw(frame_time):
@@ -58,6 +69,7 @@ def draw(frame_time):
     clear_canvas()
     background.draw()
     boy.draw()
+    rupin.draw()
     update_canvas()
 
 def main():
