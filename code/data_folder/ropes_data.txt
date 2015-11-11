@@ -1,0 +1,7 @@
+ {
+    "rope1" : {"StartState":"BOTTOM_EDGE", "x":300, "y" :250},
+	"rope2" : {"StartState":"NON_EDGE", "x":300, "y" :350},
+	"rope3" : {"StartState":"TOP_EDGE", "x":300, "y" :450},
+	"rope4  " : {"StartState":"BOTTOM_EDGE", "x":400, "y" :250}
+
+}

@@ -1,7 +1,9 @@
 __author__ = 'no_game'
 
 from pico2d import *
-from class_folder.canvas_property import *
+
+from function_folder.canvas_property import *
+
 
 class Background:
     def __init__(self):
@@ -11,6 +13,7 @@ class Background:
 
     def draw(self):
         self.image.clip_draw_to_origin(self.left, self.bottom, int( backgraound_width - self.left * backgraound_width / backgraound_original_width),int( backgraound_height - self.bottom * backgraound_height / backgraound_original_height), 0, 0)
+
     def set_player(self, player):
         self.player = player
 

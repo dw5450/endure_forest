@@ -1,0 +1,12 @@
+{
+	"foothold1" : {"StartState":"EDGE", "x":100, "y" :50},
+	"foothold2" : {"StartState":"EDGE", "x":200, "y" :50},
+	"foothold3" : {"StartState":"NON_EDGE", "x":300, "y" :50},
+	"foothold4" : {"StartState":"NON_EDGE", "x":400, "y" :50},
+	"foothold5" : {"StartState":"NON_EDGE", "x":500, "y" :50},
+	"foothold6" : {"StartState":"NON_EDGE", "x":600, "y" :50},
+	"foothold7" : {"StartState":"NON_EDGE", "x":700, "y" :50},
+	"foothold8" : {"StartState":"NON_EDGE", "x":800, "y" :50},
+	"foothold9" : {"StartState":"NON_EDGE", "x":900, "y" :50},
+	"foothold10" : {"StartState":"EDGE", "x":1000, "y" :50}
+}
