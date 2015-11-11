@@ -6,32 +6,50 @@ import title_state
 
 import class_folder.Boy
 import class_folder.Background
-import class_folder.rupin
+import class_folder.Lupin
+import class_folder.Foothold
+import class_folder.Rope
+
+import function_folder.Load_map_object
 
 
 background = None
 boy = None
-rupin = None
-running = True
+lupins = []
+footholds = []
+ropes = []
 frame_time = 0
 
 def enter():
     # fill here
-    global background
-    global boy
-    global rupin
-    background = class_folder.Background.Background()
+    global background, boy, lupins, footholds, ropes
+
     boy = class_folder.Boy.Boy()
-    rupin = class_folder.rupin.Lupin()
-    background.set_senter(boy)
+
+    background = class_folder.Background.Background()
+    background.set_player(boy)
+
+    footholds = function_folder.Load_map_object.load_foothold()
+    for foothold in footholds:
+        foothold.set_player(boy)
+
+    ropes = function_folder.Load_map_object.load_rope()
+    for rope in ropes:
+        rope.set_player(boy)
+
+    lupins = function_folder.Load_map_object.load_lupin()
+    for lupin in lupins:
+        lupin.set_player(boy)
+
 
 def exit():
-    global background
-    global boy
-    global rupin
+    global background, footholds, ropes, lupins, boy
+
     del(background)
+    del(footholds)
+    del(ropes)
+    del(lupins)
     del(boy)
-    del(rupin)
     close_canvas()
     game_framework.pop_state()
 
@@ -61,20 +79,31 @@ def update(frame_time):
     frame_time+=0.01
     background.update(frame_time)
     boy.update(frame_time)
-    rupin.update(frame_time)
+    for lupin in lupins:
+        lupin.update(frame_time)
     delay(0.01);
 
 def draw(frame_time):
     # fill here
     clear_canvas()
     background.draw()
+
+    for foothold in footholds:
+        foothold.draw()
+
+    for rope in ropes:
+        rope.draw()
+
+    for lupin in lupins:
+        lupin.draw()
+
     boy.draw()
-    rupin.draw()
+
     update_canvas()
 
 def main():
     enter()
-    while running:
+    while True:
         handle_events(frame_time)
         update(frame_time)
         draw(frame_time)
