@@ -26,6 +26,8 @@ def load_lupin():
         lupin.x = lupin_data[name]['x']
         lupin.y = lupin_data[name]['y']
         lupin.state = lupin_state_table[lupin_data[name]['StartState']]
+        lupin.banana_x = lupin.x
+        lupin.banana_y = lupin.y
         lupins.append(lupin)
     return lupins
 

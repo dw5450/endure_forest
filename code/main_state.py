@@ -81,6 +81,10 @@ def update(frame_time):
     boy.update(frame_time)
     for lupin in lupins:
         lupin.update(frame_time)
+
+    boy.fall = True
+    for foothold in footholds:
+        boy.foothold_crush(foothold.return_hitbox())
     delay(0.01);
 
 def draw(frame_time):
@@ -90,14 +94,19 @@ def draw(frame_time):
 
     for foothold in footholds:
         foothold.draw()
+        foothold.draw_hitbox()
 
     for rope in ropes:
         rope.draw()
+        rope.draw_hitbox()
 
     for lupin in lupins:
         lupin.draw()
+        lupin.draw_lupin_hitbox()
+        lupin.draw_banana_hibox()
 
     boy.draw()
+    boy.draw_hitbox()
 
     update_canvas()
 

@@ -26,5 +26,12 @@ class Foothold:
     def set_player(self, player):
         self.player = player
 
+    def return_hitbox(self):
+        return self.x -50, self.y -50, self.x + 50, self.y + 20
+
     def draw(self):
         self.image.clip_draw((self.state) * 100, 0, 100, 100, self.x - self.player.x_scrolling, self.y -self.player.y_scrolling)
+
+    def draw_hitbox(self):
+        draw_rectangle(self.return_hitbox()[0] -self.player.x_scrolling, self.return_hitbox()[1] -self.player.y_scrolling,
+                       self.return_hitbox()[2] -self.player.x_scrolling, self.return_hitbox()[3] -self.player.y_scrolling)

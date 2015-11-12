@@ -4,10 +4,16 @@ from pico2d import *
 
 
 class Lupin:
+    PIXEL_PER_METER = (10.0 / 0.3)           # 10 pixel 30cm                    #픽셀의 속도를 맞추기 위해서
 
     TIME_PER_ACTION = 2.0
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
     FRAMES_PER_ACTION = 8
+
+    THROW_SPEED_KMPH = 20.0                    # Km / Hour
+    THROW_SPEED_MPM = (THROW_SPEED_KMPH * 1000.0 / 60.0)
+    THROW_SPEED_MPS = (THROW_SPEED_MPM / 60.0)
+    THROW_SPEED_PPS = (THROW_SPEED_MPS * PIXEL_PER_METER)
 
     lupin_image = None
     banana_image = None
@@ -32,6 +38,8 @@ class Lupin:
         self.banana_frame = 0
 
         #바나나 관련 변수
+        self.banana_x = self.x
+        self.banana_y = self.y
         self.banana_total_frames = 0.0
         self.banana_frame = 0
         self.throw_dir = None
@@ -44,14 +52,33 @@ class Lupin:
         if(self.banana_image == None):
             self.banana_image = load_image('image_folder//banana.png')
 
+
+
     def set_player(self, player):
         self.player = player
+
+    def get_lupin_hitbox(self):
+         return self.x -50, self.y -50, self.x + 50, self.y + 50
+
+    def get_banana_hibox(self):
+        return self.banana_x -25, self.banana_y -25, self.banana_x + 25, self.banana_y + 25
+
+    def draw_lupin_hitbox(self):
+        draw_rectangle(self.get_lupin_hitbox()[0] -self.player.x_scrolling, self.get_lupin_hitbox()[1] -self.player.y_scrolling,
+                       self.get_lupin_hitbox()[2] -self.player.x_scrolling, self.get_lupin_hitbox()[3] -self.player.y_scrolling)
+
+    def draw_banana_hibox(self):
+        draw_rectangle(self.get_banana_hibox()[0] -self.player.x_scrolling, self.get_banana_hibox()[1] -self.player.y_scrolling,
+                       self.get_banana_hibox()[2] -self.player.x_scrolling, self.get_banana_hibox()[3] -self.player.y_scrolling)
+
+
+
 
     def draw(self):
         # fill here
         self.lupin_image.clip_draw((self.frame) * 100, self.state * 100, 100, 100,self.x - self.player.x_scrolling , self.y - self.player.y_scrolling)
         if(self.throw_banana == True):
-            self.banana_image.clip_draw((self.banana_frame) * 50, self.state * 50, 40, 50, self.x + 30 * self.throw_dir * (self.banana_total_frames) - self.player.x_scrolling, self.y - self.player.y_scrolling)
+            self.banana_image.clip_draw((self.banana_frame) * 50, self.state * 50, 40, 50, self.banana_x - self.player.x_scrolling,  self.banana_y  - self.player.y_scrolling)
 
     def update(self, frame_time):
         self.total_frames += self.FRAMES_PER_ACTION * self.ACTION_PER_TIME * frame_time
@@ -72,9 +99,13 @@ class Lupin:
             self.throw_dir = 1
         self.banana_total_frames += self.FRAMES_PER_ACTION * self.ACTION_PER_TIME * frame_time
         self.banana_frame = int(self.banana_total_frames) % 4
+        distance = Lupin.THROW_SPEED_PPS * frame_time
+
+        self.banana_x += (self.throw_dir * distance)
 
         if(self.banana_total_frames > 7):
             self.banana_time = 0
             self.banana_frame = 0
             self.banana_total_frames = 0
+            self.banana_x = self.x
             self.throw_banana = False
