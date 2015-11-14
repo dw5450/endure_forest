@@ -6,7 +6,7 @@ from function_folder.canvas_property import *
 
 
 class Boy:
-    PIXEL_PER_METER = (10.0 / 0.3)           # 10 pixel 30cm                    #픽셀의 속도를 맞추기 위해서
+    PIXEL_PER_METER = (10.0 / 0.3)           # 10 pixel 1m                    #픽셀의 속도를 맞추기 위해서
     RUN_SPEED_KMPH = 20.0                    # Km / Hour
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -17,16 +17,23 @@ class Boy:
     FALL_SPEED_MPS = (FALL_SPEED_MPM / 60.0)
     FALL_SPEED_PPS = (FALL_SPEED_MPS * PIXEL_PER_METER)
 
+    JUMP_HIGHT = 40                             #점프 높이
     JUMP_SPEED_KMPH = 40.0          # Km / Hour                       #점프는 원하는 속도 + 떨어지는 속도로 설정
     JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
     JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
     JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
 
+    PUSHED_METER = 20
+    PUSHED_SPEED_KMPH = 5.0          # Km / Hour                       #점프는 원하는 속도 + 떨어지는 속도로 설정
+    PUSHED_SPEED_MPM = (PUSHED_SPEED_KMPH * 1000.0 / 60.0)
+    PUSHED_SPEED_MPS = (PUSHED_SPEED_MPM / 60.0)
+    PUSHED_SPEED_PPS = (PUSHED_SPEED_MPS * PIXEL_PER_METER)
+
+    INVICIVLE_TIME_MAX = 2
+
     TIME_PER_ACTION = 0.5
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
     FRAMES_PER_ACTION = 2
-
-    JUMP_HIGHT = 60                             #점프 높이
 
     image = None
 
@@ -42,6 +49,14 @@ class Boy:
         self.x_dir = 0
         self.y_dir = 0
         self.fall = False
+
+        #방해물 충돌 관련 변수
+        self.pushed = False
+        self.pushed_meter = 0
+
+        #무적 관련 함수
+        self.invincible = False
+        self.invincible_time = 0;
 
         #스크롤링 관련 변수
         self.x_scrolling = 0;
@@ -63,11 +78,14 @@ class Boy:
             Boy.image = load_image('image_folder//character_sprite.png')
 
     def return_hitbox(self):
-        return self.x -50, self.y -50, self.x + 50, self.y + 50
+        return self.x - 30, self.y -30, self.x + 30, self.y + 30
 
     def update(self, frame_time):
-        if(self.x_dir != 0):
+        if(self.x_dir != 0 and self.pushed == False):
             self._move_x(frame_time)
+
+        if(self.pushed == True ):
+            self._pushed(frame_time)
 
         if(self.fall == True):
             self._fall(frame_time)
@@ -84,6 +102,20 @@ class Boy:
         distance = Boy.RUN_SPEED_PPS * frame_time
         self.x += (self.x_dir * distance)
 
+    def _pushed(self, frame_time):
+        distance = Boy.PUSHED_SPEED_PPS * frame_time
+        self.pushed_meter += distance
+        if(self.pushed_meter > self.PUSHED_METER):
+            self.pushed = False
+            self.pushed_meter = 0
+
+        if(self.state in (self.RIGHT_STAND, self.RIGHT_RUN, self.RIGHT_JUMP)):
+            self.x -= distance
+
+        if(self.state in (self.LEFT_STAND, self.LEFT_RUN, self.LEFT_JUMP)):
+            self.x += distance
+
+
     def _fall(self, frame_time):
 
         if(self.x_dir >= 0):
@@ -98,8 +130,9 @@ class Boy:
 
     def _set_scrolling(self, frame_time):
         distance = Boy.RUN_SPEED_PPS * frame_time
+
         if(canvas_width /2<= self.x  and self.x < (backgraound_width - canvas_width)):
-            self.x_scrolling += (self.x_dir * distance)
+            self.x_scrolling = self.x - canvas_width /2
 
         if(self.y >=  canvas_height/2 and self.y < (backgraound_height - canvas_height)):
             self.y_scrolling += (self.y_dir * distance)
@@ -110,9 +143,9 @@ class Boy:
         elif self.x < 0:
             self.x = 0
 
-    def foothold_crush(self, foothold_hibox):
+    def foothold_crush(self, foothold_hitbox):
         left_boy, bottom_boy, right_boy, top_boy = self.return_hitbox()
-        left_foothold, bottom_foothold, right_foothold, top_foothold = foothold_hibox
+        left_foothold, bottom_foothold, right_foothold, top_foothold = foothold_hitbox
 
         foothold_crush = True
         if left_boy > right_foothold: foothold_crush = False
@@ -132,6 +165,20 @@ class Boy:
                 self.state = self.RIGHT_STAND
             elif(self.x_dir < 0 ):
                 self.state = self.LEFT_STAND
+
+    def obstacle_crush(self, obstacle_hitbox):
+        left_boy, bottom_boy, right_boy, top_boy = self.return_hitbox()
+        left_obstacle, bottom_obstacle, right_obstacle, top_obstacle = obstacle_hitbox
+
+        foothold_crush = True
+        if left_boy > right_obstacle: foothold_crush = False
+        if right_boy < left_obstacle : foothold_crush = False
+        if top_boy < bottom_obstacle : foothold_crush = False
+        if bottom_boy > top_obstacle : foothold_crush = False
+
+        if(foothold_crush == True and self.pushed == False):
+            self.pushed = True
+            self.invincible = True
 
     def _jump(self, frame_time):
 
@@ -218,7 +265,8 @@ class Boy:
         self.state = self.LEFT_STAND
 
     def _handle_jump(self):
-        self.jump = True
+        if self.fall == False:
+            self.jump = True
 
     def _handle_lie(self):
         if(self.state == self.RIGHT_RUN or self.state == self.RIGHT_STAND):

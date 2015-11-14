@@ -57,22 +57,19 @@ class Lupin:
     def set_player(self, player):
         self.player = player
 
-    def get_lupin_hitbox(self):
+    def return_lupin_hitbox(self):
          return self.x -50, self.y -50, self.x + 50, self.y + 50
 
-    def get_banana_hibox(self):
+    def return_banana_hibox(self):
         return self.banana_x -25, self.banana_y -25, self.banana_x + 25, self.banana_y + 25
 
     def draw_lupin_hitbox(self):
-        draw_rectangle(self.get_lupin_hitbox()[0] -self.player.x_scrolling, self.get_lupin_hitbox()[1] -self.player.y_scrolling,
-                       self.get_lupin_hitbox()[2] -self.player.x_scrolling, self.get_lupin_hitbox()[3] -self.player.y_scrolling)
+        draw_rectangle(self.return_lupin_hitbox()[0] -self.player.x_scrolling, self.return_lupin_hitbox()[1] -self.player.y_scrolling,
+                       self.return_lupin_hitbox()[2] -self.player.x_scrolling, self.return_lupin_hitbox()[3] -self.player.y_scrolling)
 
     def draw_banana_hibox(self):
-        draw_rectangle(self.get_banana_hibox()[0] -self.player.x_scrolling, self.get_banana_hibox()[1] -self.player.y_scrolling,
-                       self.get_banana_hibox()[2] -self.player.x_scrolling, self.get_banana_hibox()[3] -self.player.y_scrolling)
-
-
-
+        draw_rectangle(self.return_banana_hibox()[0] -self.player.x_scrolling, self.return_banana_hibox()[1] -self.player.y_scrolling,
+                       self.return_banana_hibox()[2] -self.player.x_scrolling, self.return_banana_hibox()[3] -self.player.y_scrolling)
 
     def draw(self):
         # fill here

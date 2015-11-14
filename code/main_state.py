@@ -85,6 +85,9 @@ def update(frame_time):
     boy.fall = True
     for foothold in footholds:
         boy.foothold_crush(foothold.return_hitbox())
+
+    for lupin in lupins:
+        boy.obstacle_crush(lupin.return_lupin_hitbox())
     delay(0.01);
 
 def draw(frame_time):
