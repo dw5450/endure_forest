@@ -23,13 +23,13 @@ class Boy:
     JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
     JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
 
-    PUSHED_METER = 20
-    PUSHED_SPEED_KMPH = 5.0          # Km / Hour                       #점프는 원하는 속도 + 떨어지는 속도로 설정
+    PUSHED_MAX_METER = 40                                          #팅겨지기 원하는 거리
+    PUSHED_SPEED_KMPH = 20       # Km / Hour                       #팅겨지기 원하는 속도
     PUSHED_SPEED_MPM = (PUSHED_SPEED_KMPH * 1000.0 / 60.0)
     PUSHED_SPEED_MPS = (PUSHED_SPEED_MPM / 60.0)
     PUSHED_SPEED_PPS = (PUSHED_SPEED_MPS * PIXEL_PER_METER)
 
-    INVICIVLE_TIME_MAX = 2
+    INVINCIVLE_TIME_MAX = 1
 
     TIME_PER_ACTION = 0.5
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
@@ -53,6 +53,11 @@ class Boy:
         #방해물 충돌 관련 변수
         self.pushed = False
         self.pushed_meter = 0
+        self.cur_pushed_meter = 0
+
+
+        #매달리기 관련 변수
+        self.can_hang = False
 
         #무적 관련 함수
         self.invincible = False
@@ -78,17 +83,26 @@ class Boy:
             Boy.image = load_image('image_folder//character_sprite.png')
 
     def return_hitbox(self):
-        return self.x - 30, self.y -30, self.x + 30, self.y + 30
+        if(self.state in (self.LEFT_LIE, self.RIGHT_LIE)):
+            return self.x - 30, self.y -30, self.x + 30, self.y
+        else:
+            return self.x - 30, self.y -30, self.x + 30, self.y + 30
+
 
     def update(self, frame_time):
-        if(self.x_dir != 0 and self.pushed == False):
+
+        if(self.pushed_meter > 0 and self.invincible == False ):
+            self._pushed(frame_time)
+
+        elif(self.x_dir != 0):
             self._move_x(frame_time)
 
-        if(self.pushed == True ):
-            self._pushed(frame_time)
+        if(self.invincible == True ):
+            self._invincible(frame_time)
 
         if(self.fall == True):
             self._fall(frame_time)
+
         if(self.jump == True):
             self._jump(frame_time)
 
@@ -98,16 +112,15 @@ class Boy:
 
         self._set_frame(frame_time)
 
-    def _move_x(self, frame_time):
-        distance = Boy.RUN_SPEED_PPS * frame_time
-        self.x += (self.x_dir * distance)
-
     def _pushed(self, frame_time):
         distance = Boy.PUSHED_SPEED_PPS * frame_time
-        self.pushed_meter += distance
-        if(self.pushed_meter > self.PUSHED_METER):
+        self.cur_pushed_meter += distance
+        if(self.cur_pushed_meter > self.pushed_meter):
             self.pushed = False
+            self.cur_pushed_meter = 0
             self.pushed_meter = 0
+            self.invincible = True
+            distance -= self.cur_pushed_meter - self.pushed_meter
 
         if(self.state in (self.RIGHT_STAND, self.RIGHT_RUN, self.RIGHT_JUMP)):
             self.x -= distance
@@ -115,13 +128,25 @@ class Boy:
         if(self.state in (self.LEFT_STAND, self.LEFT_RUN, self.LEFT_JUMP)):
             self.x += distance
 
+    def _move_x(self, frame_time):
+        distance = Boy.RUN_SPEED_PPS * frame_time
+        self.x += (self.x_dir * distance)
+
+    def _invincible(self, frame_time):
+        self.invincible_time +=frame_time;
+
+        if self.invincible_time > self.INVINCIVLE_TIME_MAX:
+            self.invincible = False
+            self.invincible_time = 0
 
     def _fall(self, frame_time):
 
-        if(self.x_dir >= 0):
-            self.state = self.RIGHT_JUMP
-        else:
-            self.state = self.LEFT_JUMP
+        distance = Boy.FALL_SPEED_PPS * frame_time
+
+        self.y_dir = -1;
+        self.y -= distance
+
+    def _hang(self, frame_time):
 
         distance = Boy.FALL_SPEED_PPS * frame_time
 
@@ -135,7 +160,7 @@ class Boy:
             self.x_scrolling = self.x - canvas_width /2
 
         if(self.y >=  canvas_height/2 and self.y < (backgraound_height - canvas_height)):
-            self.y_scrolling += (self.y_dir * distance)
+            self.y_scrolling = self.x - canvas_height/2
 
     def _canvas_crush(self):
         if self.x - self.x_scrolling > canvas_width:
@@ -156,29 +181,36 @@ class Boy:
         if(foothold_crush == True):
             self.fall = False
             self.jump_max_point =  self.y + self.JUMP_HIGHT
-            if(self.state in (self.RIGHT_JUMP, self.LEFT_JUMP)):
-                if(self.x_dir >= 0):
-                    self.state = self.RIGHT_STAND
-                elif(self.x_dir < 0 ):
-                    self.state = self.LEFT_STAND
-            elif(self.x_dir > 0):
+            if self.state == self.RIGHT_JUMP:
                 self.state = self.RIGHT_STAND
-            elif(self.x_dir < 0 ):
+
+            elif self.state == self.LEFT_JUMP:
                 self.state = self.LEFT_STAND
+
+    def rope_crush(self, rope_hitbox):
+        left_boy, bottom_boy, right_boy, top_boy = self.return_hitbox()
+        left_rope, bottom_rope, right_rope, top_rope = rope_hitbox
+
+        obstacle_crush = True
+        if left_boy > right_rope: obstacle_crush = False
+        if right_boy < left_rope : obstacle_crush = False
+        if top_boy < bottom_rope : obstacle_crush = False
+        if bottom_boy > top_rope : obstacle_crush = False
+
 
     def obstacle_crush(self, obstacle_hitbox):
         left_boy, bottom_boy, right_boy, top_boy = self.return_hitbox()
         left_obstacle, bottom_obstacle, right_obstacle, top_obstacle = obstacle_hitbox
 
-        foothold_crush = True
-        if left_boy > right_obstacle: foothold_crush = False
-        if right_boy < left_obstacle : foothold_crush = False
-        if top_boy < bottom_obstacle : foothold_crush = False
-        if bottom_boy > top_obstacle : foothold_crush = False
+        obstacle_crush = True
+        if left_boy > right_obstacle: obstacle_crush = False
+        if right_boy < left_obstacle : obstacle_crush = False
+        if top_boy < bottom_obstacle : obstacle_crush = False
+        if bottom_boy > top_obstacle : obstacle_crush = False
 
-        if(foothold_crush == True and self.pushed == False):
+        if(obstacle_crush == True and self.pushed == False and self.invincible == False):
+            self.pushed_meter = self.PUSHED_MAX_METER
             self.pushed = True
-            self.invincible = True
 
     def _jump(self, frame_time):
 
@@ -221,16 +253,14 @@ class Boy:
 
         #오른쪽 이동, 멈춤
         if (event.type, event.key) == (SDL_KEYDOWN, SDLK_RIGHT):
-            if self.state != self.LEFT_LIE and self.state != self.RIGHT_LIE:
-                self._handle_right_run()
+            self._handle_right_run()
         elif (event.type, event.key) == (SDL_KEYUP, SDLK_RIGHT):
             if self.state in (self.RIGHT_RUN, self.RIGHT_JUMP):
                 self._handle_right_stand()
 
         #왼쪽 이동, 멈춤
         if (event.type, event.key) == (SDL_KEYDOWN, SDLK_LEFT):
-            if self.state != self.LEFT_LIE and self.state != self.RIGHT_LIE:
-                self._handle_left_run()
+            self._handle_left_run()
         elif (event.type, event.key) == (SDL_KEYUP, SDLK_LEFT):
             if self.state in (self.LEFT_RUN,self.LEFT_JUMP):
                 self._handle_left_stand()

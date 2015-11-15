@@ -5,15 +5,13 @@ import game_framework
 import title_state
 
 import class_folder.Boy
-import class_folder.Background
 import class_folder.Lupin
 import class_folder.Foothold
 import class_folder.Rope
 
 import function_folder.Load_map_object
+import function_folder.canvas_property
 
-
-background = None
 boy = None
 lupins = []
 footholds = []
@@ -22,12 +20,9 @@ frame_time = 0
 
 def enter():
     # fill here
-    global background, boy, lupins, footholds, ropes
+    global boy, lupins, footholds, ropes
 
     boy = class_folder.Boy.Boy()
-
-    background = class_folder.Background.Background()
-    background.set_player(boy)
 
     footholds = function_folder.Load_map_object.load_foothold()
     for foothold in footholds:
@@ -43,9 +38,8 @@ def enter():
 
 
 def exit():
-    global background, footholds, ropes, lupins, boy
+    global footholds, ropes, lupins, boy
 
-    del(background)
     del(footholds)
     del(ropes)
     del(lupins)
@@ -77,7 +71,6 @@ def handle_events(frame_time):
 def update(frame_time):
     # fill here
     frame_time+=0.01
-    background.update(frame_time)
     boy.update(frame_time)
     for lupin in lupins:
         lupin.update(frame_time)
@@ -86,14 +79,17 @@ def update(frame_time):
     for foothold in footholds:
         boy.foothold_crush(foothold.return_hitbox())
 
+    boy.pushed = False
     for lupin in lupins:
         boy.obstacle_crush(lupin.return_lupin_hitbox())
-    delay(0.01);
+        boy.obstacle_crush(lupin.return_banana_hibox())
+    delay(0.01)
 
 def draw(frame_time):
     # fill here
     clear_canvas()
-    background.draw()
+
+    function_folder.canvas_property.draw_background(boy)
 
     for foothold in footholds:
         foothold.draw()
