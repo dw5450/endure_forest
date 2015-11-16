@@ -27,7 +27,7 @@ class Rope:
     def set_player(self, player):
         self.player = player
 
-    def get_hitbox(self):
+    def return_hitbox(self):
         return self.x -10, self.y -50, self.x + 10, self.y + 50
 
 
@@ -35,5 +35,5 @@ class Rope:
         self.image.clip_draw((self.state) * 100, 100, 100, 100, self.x - self.player.x_scrolling, self.y -self.player.y_scrolling)
 
     def draw_hitbox(self):
-        draw_rectangle(self.get_hitbox()[0] -self.player.x_scrolling, self.get_hitbox()[1] -self.player.y_scrolling,
-                       self.get_hitbox()[2] -self.player.x_scrolling, self.get_hitbox()[3] -self.player.y_scrolling)
+        draw_rectangle(self.return_hitbox()[0] -self.player.x_scrolling, self.return_hitbox()[1] -self.player.y_scrolling,
+                       self.return_hitbox()[2] -self.player.x_scrolling, self.return_hitbox()[3] -self.player.y_scrolling)

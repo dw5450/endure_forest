@@ -18,7 +18,7 @@ def exit():
     # fill here
     global image
     del(image)
-    close_canvas();
+    close_canvas()
     game_framework.quit()
 
 def pause():

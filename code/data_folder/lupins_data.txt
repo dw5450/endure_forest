@@ -1,3 +1,4 @@
 {
-	"lupin5" : {"StartState":"LEFT_THROW", "x":400, "y" :160}
+
+	"lupin4" : {"StartState":"RIGHT_THROW", "x":700, "y" :100}
 }

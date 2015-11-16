@@ -17,7 +17,7 @@ class Boy:
     FALL_SPEED_MPS = (FALL_SPEED_MPM / 60.0)
     FALL_SPEED_PPS = (FALL_SPEED_MPS * PIXEL_PER_METER)
 
-    JUMP_HIGHT = 40                             #점프 높이
+    JUMP_HIGHT = 60                             #점프 높이
     JUMP_SPEED_KMPH = 40.0          # Km / Hour                       #점프는 원하는 속도 + 떨어지는 속도로 설정
     JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
     JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
@@ -41,6 +41,7 @@ class Boy:
     LEFT_STAND, RIGHT_STAND = 0, 1
     LEFT_JUMP, RIGHT_JUMP = 2, 3
     LEFT_LIE, RIGHT_LIE = 4, 5
+    HANG = 6
 
     def __init__(self):
 
@@ -55,9 +56,13 @@ class Boy:
         self.pushed_meter = 0
         self.cur_pushed_meter = 0
 
-
-        #매달리기 관련 변수
+        # 매달리기 관련 변수
+        self.rope_x_pos = 0
+        self.stand_hang = False
+        self.hang = False
         self.can_hang = False
+        self.hang_y_dir = 0
+        self.hang_x_dir = 0
 
         #무적 관련 함수
         self.invincible = False
@@ -68,7 +73,7 @@ class Boy:
         self.y_scrolling = 0;
 
         #점프 관련 변수
-        self.jump_max_point =  self.y + self.JUMP_HIGHT
+        self.cur_jumped_meter = 0
         self.jump = 0
 
         #프레임 관련 변수
@@ -89,8 +94,8 @@ class Boy:
             return self.x - 30, self.y -30, self.x + 30, self.y + 30
 
 
+    #업데이트
     def update(self, frame_time):
-
         if(self.pushed_meter > 0 and self.invincible == False ):
             self._pushed(frame_time)
 
@@ -100,11 +105,14 @@ class Boy:
         if(self.invincible == True ):
             self._invincible(frame_time)
 
-        if(self.fall == True):
-            self._fall(frame_time)
+        if(self.stand_hang == True):
+            self._hang(frame_time)
 
         if(self.jump == True):
             self._jump(frame_time)
+
+        elif(self.fall == True):
+            self._fall(frame_time)
 
         self._set_scrolling(frame_time)
 
@@ -146,12 +154,30 @@ class Boy:
         self.y_dir = -1;
         self.y -= distance
 
+        if(self.state in (self.LEFT_STAND, self.LEFT_RUN)):
+            self.state = self.LEFT_JUMP
+        elif(self.state in(self.RIGHT_STAND, self.RIGHT_RUN)):
+            self.state = self.RIGHT_JUMP
+
     def _hang(self, frame_time):
 
-        distance = Boy.FALL_SPEED_PPS * frame_time
+        if(self.can_hang == True):
+            self.fall = False
+            self.x = self.rope_x_pos
+            if(self.x_dir != 0):
+                self.hang_x_dir = self.x_dir
+            self.x_dir = 0
+            self.state = self.HANG
+            self.hang = True
+            distance = Boy.RUN_SPEED_PPS * frame_time
 
-        self.y_dir = -1;
-        self.y -= distance
+            self.y += self.hang_y_dir * distance
+            self.jump_max_point =  self.y + self.JUMP_HIGHT
+
+        if(self.hang == True and self.can_hang == False):
+            self.x_dir = self.hang_x_dir
+            self.hang = False
+            self.stand_hang = False
 
     def _set_scrolling(self, frame_time):
         distance = Boy.RUN_SPEED_PPS * frame_time
@@ -160,7 +186,7 @@ class Boy:
             self.x_scrolling = self.x - canvas_width /2
 
         if(self.y >=  canvas_height/2 and self.y < (backgraound_height - canvas_height)):
-            self.y_scrolling = self.x - canvas_height/2
+            self.y_scrolling = self.y - canvas_height/2
 
     def _canvas_crush(self):
         if self.x - self.x_scrolling > canvas_width:
@@ -181,22 +207,31 @@ class Boy:
         if(foothold_crush == True):
             self.fall = False
             self.jump_max_point =  self.y + self.JUMP_HIGHT
+
+            if(self.state == self.HANG):
+                self.state = self.RIGHT_STAND
+
             if self.state == self.RIGHT_JUMP:
                 self.state = self.RIGHT_STAND
 
             elif self.state == self.LEFT_JUMP:
                 self.state = self.LEFT_STAND
 
+            self.y_dir = 0
+
     def rope_crush(self, rope_hitbox):
         left_boy, bottom_boy, right_boy, top_boy = self.return_hitbox()
         left_rope, bottom_rope, right_rope, top_rope = rope_hitbox
 
-        obstacle_crush = True
-        if left_boy > right_rope: obstacle_crush = False
-        if right_boy < left_rope : obstacle_crush = False
-        if top_boy < bottom_rope : obstacle_crush = False
-        if bottom_boy > top_rope : obstacle_crush = False
+        rope_crush = True
+        if left_boy > right_rope: rope_crush = False
+        if right_boy < left_rope : rope_crush = False
+        if top_boy < bottom_rope : rope_crush = False
+        if bottom_boy > top_rope : rope_crush = False
 
+        if(rope_crush == True):
+            self.can_hang = True
+            self.rope_x_pos = (left_rope + right_rope) / 2
 
     def obstacle_crush(self, obstacle_hitbox):
         left_boy, bottom_boy, right_boy, top_boy = self.return_hitbox()
@@ -215,30 +250,36 @@ class Boy:
     def _jump(self, frame_time):
 
         #점프 모션 설정
-        if( self.state in (self.RIGHT_STAND, self.RIGHT_RUN)):
+        if( self.state in (self.RIGHT_STAND, self.RIGHT_RUN, self.HANG)):
             self.state = self.RIGHT_JUMP
-        elif(self.state in (self.LEFT_STAND, self.LEFT_RUN)):
+        elif(self.state in (self.LEFT_STAND, self.LEFT_RUN, self.HANG)):
             self.state = self.LEFT_JUMP
 
         #점프한 높이 설정
         distance = Boy.JUMP_SPEED_PPS * frame_time
         self.y_dir = 1;
-        self.y += distance
-
+        self.cur_jumped_meter += distance
         #점프의 마지막 높이 설정
-        if (self.y > self.jump_max_point):
-            self.y = self.jump_max_point
+        if (self.cur_jumped_meter > self.JUMP_HIGHT):
+            self.y += distance - self.cur_jumped_meter + self.JUMP_HIGHT
             self.jump = False
+            self.cur_jumped_meter = 0
+        else:
+            self.y += distance
 
     def _set_frame(self, frame_time):
         if (self.x_dir == 0 and (self.state == self.RIGHT_STAND or self.state == self.LEFT_STAND)):  #멈췃을때 이미지 스프라이트가 없어서 편법 사용
-            self.total_frames = 0;
+            self.total_frames = 0
         elif (self.state == self.RIGHT_LIE or self.state == self.LEFT_LIE):
-            self.total_frames = 0;
+            self.total_frames = 0
         elif (self.state == self.RIGHT_JUMP or self.state == self.LEFT_JUMP):
-            self.total_frames = 0;
+            self.total_frames = 0
 
-        self.total_frames += Boy.FRAMES_PER_ACTION * Boy.ACTION_PER_TIME * frame_time
+
+        if (self.state == self.HANG and self.hang_y_dir == 0):
+            self.total_frames = 0
+
+        else : self.total_frames += Boy.FRAMES_PER_ACTION * Boy.ACTION_PER_TIME * frame_time
 
         self.frame = int(self.total_frames) % 4
 
@@ -249,54 +290,87 @@ class Boy:
         draw_rectangle(self.return_hitbox()[0] -self.x_scrolling, self.return_hitbox()[1] -self.y_scrolling,
                        self.return_hitbox()[2] -self.x_scrolling, self.return_hitbox()[3] -self.y_scrolling)
 
+    #키입력
     def handle_event(self, event):
 
-        #오른쪽 이동, 멈춤
+        #오른쪽 방향키 입력
         if (event.type, event.key) == (SDL_KEYDOWN, SDLK_RIGHT):
             self._handle_right_run()
         elif (event.type, event.key) == (SDL_KEYUP, SDLK_RIGHT):
-            if self.state in (self.RIGHT_RUN, self.RIGHT_JUMP):
+            if self.state in (self.RIGHT_RUN, self.RIGHT_JUMP, self.HANG):
                 self._handle_right_stand()
 
-        #왼쪽 이동, 멈춤
+        #왼쪽 방향키 입력
         if (event.type, event.key) == (SDL_KEYDOWN, SDLK_LEFT):
             self._handle_left_run()
         elif (event.type, event.key) == (SDL_KEYUP, SDLK_LEFT):
-            if self.state in (self.LEFT_RUN,self.LEFT_JUMP):
+            if self.state in (self.LEFT_RUN,self.LEFT_JUMP, self.HANG):
                 self._handle_left_stand()
 
-        #점프
-        if (event.type, event.key) == (SDL_KEYDOWN, SDLK_LALT):
-            if self.state in (self.RIGHT_STAND, self.LEFT_STAND, self.RIGHT_RUN, self.LEFT_RUN):
-                self._handle_jump()
+        #위쪽 방향키 입력
+        if (event.type, event.key) == (SDL_KEYDOWN, SDLK_UP):
+            if self.state in (self.RIGHT_STAND, self.LEFT_STAND, self.RIGHT_RUN, self.LEFT_RUN, self.HANG, self.LEFT_JUMP, self.RIGHT_JUMP):
+                self._handle_up_hang()
+        elif (event.type, event.key) == (SDL_KEYUP, SDLK_UP):
+            if self.state == self.HANG:
+                self._handle_hang_False()
 
-        #엎드리기/일어나기
+        #아래쪽 방향키 입력
         if (event.type, event.key) == (SDL_KEYDOWN, SDLK_DOWN):
             if self.state in (self.RIGHT_STAND, self.LEFT_STAND, self.RIGHT_RUN, self.LEFT_RUN):
                 self._handle_lie()
+            if self.state == self.HANG:
+                self._handle_down_hang()
+
         elif (event.type, event.key) == (SDL_KEYUP, SDLK_DOWN):
             if self.state in (self.RIGHT_LIE, self.LEFT_LIE):
                 self._handle_rise()
+            if self.state == self.HANG:
+                self._handle_hang_False()
+
+        #왼쪽 알트키 입력
+        if (event.type, event.key) == (SDL_KEYDOWN, SDLK_LALT):
+            if self.state in (self.RIGHT_STAND, self.LEFT_STAND, self.RIGHT_RUN, self.LEFT_RUN, self.HANG):
+                self._handle_jump()
 
     def _handle_right_run(self):
-        self.x_dir = 1;
-        self.state = self.RIGHT_RUN
+
+        if(self.hang == True):
+            self.hang_x_dir = 1
+        else:
+            self.x_dir = 1
+            self.state = self.RIGHT_RUN
 
     def _handle_right_stand(self):
-        self.x_dir = 0;
+        self.x_dir = 0
+        self.hang_x_dir = 0
         self.state = self.RIGHT_STAND
 
     def _handle_left_run(self):
-        self.x_dir = -1;
-        self.state = self.LEFT_RUN
+
+        if(self.hang == True):
+            self.hang_x_dir = -1
+        else:
+            self.x_dir = -1
+            self.state = self.LEFT_RUN
 
     def _handle_left_stand(self):
-        self.x_dir = 0;
+        self.x_dir = 0
+        self.hang_x_dir = 0
         self.state = self.LEFT_STAND
 
     def _handle_jump(self):
-        if self.fall == False:
-            self.jump = True
+        self.jump = True
+
+        if(self.hang == True):
+            self.stand_hang = False
+            self.hang = False
+            self.x_dir = self.hang_x_dir
+
+            if(self.x_dir < 0):
+                self.state = self.LEFT_JUMP
+            elif(self.x_dir > 0):
+                self.state = self.RIGHT_JUMP
 
     def _handle_lie(self):
         if(self.state == self.RIGHT_RUN or self.state == self.RIGHT_STAND):
@@ -313,6 +387,22 @@ class Boy:
 
         elif (self.state == self.LEFT_LIE):
             self.state = self.LEFT_STAND
+
+    def _handle_up_hang(self):
+        self.stand_hang = True
+        self.hang_y_dir = 1
+
+    def _handle_down_hang(self):
+        self.stand_hang = True
+        self.hang_y_dir = -1
+
+    def _handle_hang_False(self):
+        if(self.can_hang == False):
+            self.hang = False
+
+        self.hang_y_dir = 0
+
+
 
 
 
