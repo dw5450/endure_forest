@@ -66,11 +66,12 @@ class Boy:
 
         #무적 관련 함수
         self.invincible = False
-        self.invincible_time = 0;
+        self.invincible_sprite = 0
+        self.invincible_time = 0
 
         #스크롤링 관련 변수
-        self.x_scrolling = 0;
-        self.y_scrolling = 0;
+        self.x_scrolling = 0
+        self.y_scrolling = 0
 
         #점프 관련 변수
         self.cur_jumped_meter = 0
@@ -142,10 +143,12 @@ class Boy:
 
     def _invincible(self, frame_time):
         self.invincible_time +=frame_time;
+        self.invincible_sprite = 400
 
         if self.invincible_time > self.INVINCIVLE_TIME_MAX:
             self.invincible = False
             self.invincible_time = 0
+            self.invincible_sprite = 0
 
     def _fall(self, frame_time):
 
@@ -284,7 +287,7 @@ class Boy:
         self.frame = int(self.total_frames) % 4
 
     def draw(self):
-        self.image.clip_draw((self.frame) * 100, self.state * 100, 100, 100, self.x - self.x_scrolling, self.y - self.y_scrolling)
+        self.image.clip_draw((self.frame) * 100 + self. invincible_sprite, self.state * 100, 100, 100, self.x - self.x_scrolling, self.y - self.y_scrolling)
 
     def draw_hitbox(self):
         draw_rectangle(self.return_hitbox()[0] -self.x_scrolling, self.return_hitbox()[1] -self.y_scrolling,
