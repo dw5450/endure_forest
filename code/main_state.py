@@ -12,6 +12,7 @@ import class_folder.Rope
 import function_folder.Load_map_object
 import function_folder.canvas_property
 
+draw_hitbox = False
 boy = None
 lupins = []
 footholds = []
@@ -55,7 +56,7 @@ def resume():
 
 
 def handle_events(frame_time):
-    global boy
+    global boy, draw_hitbox
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -64,6 +65,11 @@ def handle_events(frame_time):
              exit()
         elif(event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
              game_framework.change_state(title_state)
+        elif(event.type, event.key) == (SDL_KEYDOWN, SDLK_h):
+            if(draw_hitbox == True):
+                draw_hitbox = False
+            elif(draw_hitbox == False):
+                draw_hitbox = True
         else:
             boy.handle_event(event)
 
@@ -94,25 +100,30 @@ def update(frame_time):
 
 def draw(frame_time):
     # fill here
+    global draw_hitbox
     clear_canvas()
 
     function_folder.canvas_property.draw_background(boy)
 
     for foothold in footholds:
         foothold.draw()
-        foothold.draw_hitbox()
+        if(draw_hitbox == True):
+            foothold.draw_hitbox()
 
     for rope in ropes:
         rope.draw()
-        rope.draw_hitbox()
+        if(draw_hitbox == True):
+            rope.draw_hitbox()
 
     for lupin in lupins:
         lupin.draw()
-        lupin.draw_lupin_hitbox()
-        lupin.draw_banana_hibox()
+        if(draw_hitbox == True):
+            lupin.draw_lupin_hitbox()
+            lupin.draw_banana_hibox()
 
     boy.draw()
-    boy.draw_hitbox()
+    if(draw_hitbox == True):
+        boy.draw_hitbox()
 
     update_canvas()
 
