@@ -102,7 +102,6 @@ def draw(frame_time):
     # fill here
     global draw_hitbox
     clear_canvas()
-
     function_folder.canvas_property.draw_background(boy)
 
     for foothold in footholds:

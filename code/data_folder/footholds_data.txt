@@ -1,12 +1,13 @@
 {
 	"foothold1" : {"StartState":"EDGE", "x":50, "y" :100},
-	"foothold2" : {"StartState":"NON_EDGE", "x":200, "y" :100},
-	"foothold3" : {"StartState":"NON_EDGE", "x":300, "y" :100},
-	"foothold4" : {"StartState":"NON_EDGE", "x":400, "y" :100},
-	"foothold5" : {"StartState":"NON_EDGE", "x":500, "y" :100},
-	"foothold6" : {"StartState":"NON_EDGE", "x":600, "y" :100},
-	"foothold7" : {"StartState":"NON_EDGE", "x":700, "y" :100},
-	"foothold8" : {"StartState":"NON_EDGE", "x":800, "y" :100},
-	"foothold9" : {"StartState":"NON_EDGE", "x":900, "y" :100},
-	"foothold10" : {"StartState":"EDGE", "x":1000, "y" :100}
+	"foothold2" : {"StartState":"NON_EDGE", "x":250, "y" :100},
+	"foothold3" : {"StartState":"NON_EDGE", "x":350, "y" :100},
+	"foothold4" : {"StartState":"NON_EDGE", "x":450, "y" :100},
+	"foothold5" : {"StartState":"NON_EDGE", "x":550, "y" :100},
+	"foothold6" : {"StartState":"NON_EDGE", "x":650, "y" :100},
+	"foothold7" : {"StartState":"NON_EDGE", "x":750, "y" :100},
+	"foothold8" : {"StartState":"NON_EDGE", "x":850, "y" :100},
+	"foothold9" : {"StartState":"NON_EDGE", "x":950, "y" :100},
+	"foothold10" : {"StartState":"EDGE", "x":1050, "y" :100},
+	"foothold11" : {"StartState":"EDGE", "x":300, "y" :450}
 }

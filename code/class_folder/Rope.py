@@ -28,7 +28,10 @@ class Rope:
         self.player = player
 
     def return_hitbox(self):
-        return self.x -10, self.y -50, self.x + 10, self.y + 50
+        if self.state == self.TOP_EDGE:
+            return self.x -10, self.y -50, self.x + 10, self.y + 25
+        else :
+            return self.x -10, self.y -50, self.x + 10, self.y + 50
 
 
     def draw(self):

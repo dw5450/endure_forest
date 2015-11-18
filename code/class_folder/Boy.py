@@ -6,7 +6,7 @@ from function_folder.canvas_property import *
 
 
 class Boy:
-    PIXEL_PER_METER = (10.0 / 0.3)           # 10 pixel 1m                    #픽셀의 속도를 맞추기 위해서
+    PIXEL_PER_METER = (10.0 / 0.3)           # 10 pixel 30cm                    #픽셀의 속도를 맞추기 위해서
     RUN_SPEED_KMPH = 20.0                    # Km / Hour
     RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
     RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -58,6 +58,7 @@ class Boy:
 
         # 매달리기 관련 변수
         self.rope_x_pos = 0
+        self.rope_y_end_pos = 0
         self.stand_hang = False
         self.hang = False
         self.can_hang = False
@@ -93,7 +94,6 @@ class Boy:
             return self.x - 30, self.y -30, self.x + 30, self.y
         else:
             return self.x - 30, self.y -30, self.x + 30, self.y + 30
-
 
     #업데이트
     def update(self, frame_time):
@@ -163,7 +163,6 @@ class Boy:
             self.state = self.RIGHT_JUMP
 
     def _hang(self, frame_time):
-
         if(self.can_hang == True):
             self.fall = False
             self.x = self.rope_x_pos
@@ -201,14 +200,15 @@ class Boy:
         left_boy, bottom_boy, right_boy, top_boy = self.return_hitbox()
         left_foothold, bottom_foothold, right_foothold, top_foothold = foothold_hitbox
 
-        foothold_crush = True
+        if bottom_boy < top_foothold and bottom_boy > bottom_foothold:foothold_crush = True
+        else:foothold_crush = False
         if left_boy > right_foothold: foothold_crush = False
         if right_boy < left_foothold : foothold_crush = False
-        if top_boy < bottom_foothold : foothold_crush = False
-        if bottom_boy > top_foothold : foothold_crush = False
 
-        if(foothold_crush == True):
+
+        if(foothold_crush == True and self.hang == False):
             self.fall = False
+            self.y = top_foothold + 29
             self.jump_max_point =  self.y + self.JUMP_HIGHT
 
             if(self.state == self.HANG):
@@ -280,7 +280,7 @@ class Boy:
 
 
         if (self.state == self.HANG and self.hang_y_dir == 0):
-            self.total_frames = 0
+            self.frame = 0
 
         else : self.total_frames += Boy.FRAMES_PER_ACTION * Boy.ACTION_PER_TIME * frame_time
 
@@ -322,14 +322,14 @@ class Boy:
         if (event.type, event.key) == (SDL_KEYDOWN, SDLK_DOWN):
             if self.state in (self.RIGHT_STAND, self.LEFT_STAND, self.RIGHT_RUN, self.LEFT_RUN):
                 self._handle_lie()
-            if self.state == self.HANG:
-                self._handle_down_hang()
+
+            self._handle_down_hang()
 
         elif (event.type, event.key) == (SDL_KEYUP, SDLK_DOWN):
             if self.state in (self.RIGHT_LIE, self.LEFT_LIE):
                 self._handle_rise()
-            if self.state == self.HANG:
-                self._handle_hang_False()
+
+            self._handle_hang_False()
 
         #왼쪽 알트키 입력
         if (event.type, event.key) == (SDL_KEYDOWN, SDLK_LALT):
