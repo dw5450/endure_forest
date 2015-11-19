@@ -30,6 +30,8 @@ class Rope:
     def return_hitbox(self):
         if self.state == self.TOP_EDGE:
             return self.x -10, self.y -50, self.x + 10, self.y + 25
+        elif self.state == self.BOTTOM_EDGE:
+            return self.x -10, self.y - 20, self.x + 10, self.y + 50
         else :
             return self.x -10, self.y -50, self.x + 10, self.y + 50
 

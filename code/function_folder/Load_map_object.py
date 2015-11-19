@@ -24,10 +24,10 @@ def load_lupin():
         lupin = class_folder.Lupin.Lupin()
         lupin.name = name
         lupin.x = lupin_data[name]['x']
-        lupin.y = lupin_data[name]['y']
+        lupin.y = lupin_data[name]['y'] + 60
         lupin.state = lupin_state_table[lupin_data[name]['StartState']]
         lupin.banana_x = lupin.x
-        lupin.banana_y = lupin.y
+        lupin.banana_y = lupin.y + 10
         lupins.append(lupin)
     return lupins
 

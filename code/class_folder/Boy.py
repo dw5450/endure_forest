@@ -33,15 +33,21 @@ class Boy:
 
     TIME_PER_ACTION = 0.5
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-    FRAMES_PER_ACTION = 2
+    FRAMES_PER_ACTION = 3
 
     image = None
+    bgm = None
+    jump_sound = None
 
     LEFT_RUN, RIGHT_RUN = 0, 1
     LEFT_STAND, RIGHT_STAND = 0, 1
     LEFT_JUMP, RIGHT_JUMP = 2, 3
     LEFT_LIE, RIGHT_LIE = 4, 5
     HANG = 6
+
+    SOUND_NONE_PLAY = 21
+    SOUND_PAUSE = 22
+    SOUND_PLAY= 23
 
     def __init__(self):
 
@@ -77,6 +83,10 @@ class Boy:
         #점프 관련 변수
         self.cur_jumped_meter = 0
         self.jump = 0
+        self.jump_sound_state = Boy.SOUND_NONE_PLAY
+        if Boy.jump_sound == None:
+            self.jump_sound = load_music('sound_folder//walk_vine.mp3')
+            self.jump_sound.set_volume(128)
 
         #프레임 관련 변수
         self.frame = 0
@@ -88,6 +98,15 @@ class Boy:
         #보이 이미지 변수
         if Boy.image == None:
             Boy.image = load_image('image_folder//character_sprite.png')
+
+        #ui
+        if Boy.bgm == None:
+            Boy.bgm = load_music('sound_folder//forest_bgm.mp3')
+
+        self.bgm.set_volume(64)
+        self.bgm_state = self.SOUND_PLAY
+        Boy.bgm.repeat_play()
+
 
     def return_hitbox(self):
         if(self.state in (self.LEFT_LIE, self.RIGHT_LIE)):
@@ -120,6 +139,9 @@ class Boy:
         self._canvas_crush()
 
         self._set_frame(frame_time)
+
+        if self.jump_sound_state == self.SOUND_NONE_PLAY:
+            self.bgm.resume()
 
     def _pushed(self, frame_time):
         distance = Boy.PUSHED_SPEED_PPS * frame_time
@@ -222,6 +244,8 @@ class Boy:
 
             self.y_dir = 0
 
+
+
     def rope_crush(self, rope_hitbox):
         left_boy, bottom_boy, right_boy, top_boy = self.return_hitbox()
         left_rope, bottom_rope, right_rope, top_rope = rope_hitbox
@@ -267,6 +291,7 @@ class Boy:
             self.y += distance - self.cur_jumped_meter + self.JUMP_HIGHT
             self.jump = False
             self.cur_jumped_meter = 0
+            self.jump_sound_state = self.SOUND_NONE_PLAY
         else:
             self.y += distance
 
@@ -363,7 +388,12 @@ class Boy:
         self.state = self.LEFT_STAND
 
     def _handle_jump(self):
-        self.jump = True
+        if(self.jump == False):
+            self.bgm_state = self.SOUND_PAUSE
+
+            #self.jump_sound.play()
+            #self.jump_sound_state = self.SOUND_PLAY
+            self.jump = True
 
         if(self.hang == True):
             self.stand_hang = False
@@ -383,6 +413,8 @@ class Boy:
             self.state = self.LEFT_LIE
 
         self.x_dir = 0
+
+        self.bgm.resume()
 
     def _handle_rise(self):
         if (self.state == self.RIGHT_LIE):

@@ -130,6 +130,7 @@ def draw(frame_time):
 
 def main():
     enter()
+
     while True:
         handle_events(frame_time)
         update(frame_time)
