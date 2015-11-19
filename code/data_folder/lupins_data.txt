@@ -1,3 +1,13 @@
 {
-	"lupin3" : {"StartState":"LEFT_THROW", "x":450, "y" :150}
+	"lupin53" : {"StartState":"RIGHT_THROW", "x":550, "y" :350},
+	"lupin103" : {"StartState":"LEFT_THROW", "x":1050, "y" :350},
+
+	"lupin38" : {"StartState":"LEFT_THROW", "x":350, "y" :550},
+
+	"lupin49" : {"StartState":"LEFT_THROW", "x":450, "y" :650},
+	"lupin69" : {"StartState":"LEFT_THROW", "x":650, "y" :650},
+
+	"lupin211." : {"StartState":"RIGHT_THROW", "x":250, "y" :850},
+
+	"lupin014." : {"StartState":"RIGHT_THROW", "x":50, "y" :1150}
 }

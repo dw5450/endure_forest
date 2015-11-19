@@ -23,7 +23,7 @@ class Boy:
     JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
     JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
 
-    PUSHED_MAX_METER = 60                                          #팅겨지기 원하는 거리
+    PUSHED_MAX_METER = 80                                          #팅겨지기 원하는 거리
     PUSHED_SPEED_KMPH = 20       # Km / Hour                       #팅겨지기 원하는 속도
     PUSHED_SPEED_MPM = (PUSHED_SPEED_KMPH * 1000.0 / 60.0)
     PUSHED_SPEED_MPS = (PUSHED_SPEED_MPM / 60.0)
@@ -187,7 +187,7 @@ class Boy:
             self.state = self.RIGHT_JUMP
 
     def _hang(self, frame_time):
-        if(self.can_hang == True):
+        if(self.can_hang == True ):
             self.fall = False
             self.x = self.rope_x_pos
 
@@ -381,9 +381,6 @@ class Boy:
             if self.state in (self.RIGHT_STAND, self.LEFT_STAND, self.RIGHT_RUN, self.LEFT_RUN, self.HANG):
                 self._initalize_pos()
 
-
-
-
     def _handle_right_run(self):
 
         if(self.hang == True):
@@ -447,12 +444,14 @@ class Boy:
             self.state = self.LEFT_STAND
 
     def _handle_up_hang(self):
-        self.stand_hang = True
-        self.hang_y_dir = 1
+        if self.pushed == False:
+            self.stand_hang = True
+            self.hang_y_dir = 1
 
     def _handle_down_hang(self):
-        self.stand_hang = True
-        self.hang_y_dir = -1
+        if self.pushed == False:
+            self.stand_hang = True
+            self.hang_y_dir = -1
 
     def _handle_hang_False(self):
         if(self.can_hang == False):
@@ -462,6 +461,7 @@ class Boy:
 
     def _initalize_pos(self):
         self.x, self.y = 0, 200
+        self.x_scrolling, self.y_scrolling = 0, 0
 
 
 
