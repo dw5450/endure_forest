@@ -58,10 +58,10 @@ class Lupin:
         self.player = player
 
     def return_lupin_hitbox(self):
-         return self.x -50, self.y - 40, self.x + 50, self.y + 50
+         return self.x -40, self.y - 40, self.x + 40, self.y + 50
 
     def return_banana_hibox(self):
-        return self.banana_x - 10, self.banana_y - 10, self.banana_x + 10, self.banana_y + 10
+        return self.banana_x - 20, self.banana_y - 10, self.banana_x + 20, self.banana_y + 10
 
     def draw_lupin_hitbox(self):
         draw_rectangle(self.return_lupin_hitbox()[0] -self.player.x_scrolling, self.return_lupin_hitbox()[1] -self.player.y_scrolling,

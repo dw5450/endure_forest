@@ -93,7 +93,6 @@ def update(frame_time):
     for foothold in footholds:
         boy.foothold_crush(foothold.return_hitbox())
 
-    boy.pushed = False
     for lupin in lupins:
         boy.obstacle_crush(lupin.return_banana_hibox())
         boy.obstacle_crush(lupin.return_lupin_hitbox())

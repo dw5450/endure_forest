@@ -23,7 +23,7 @@ class Boy:
     JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
     JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
 
-    PUSHED_MAX_METER = 80                                          #팅겨지기 원하는 거리
+    PUSHED_MAX_METER = 60                                          #팅겨지기 원하는 거리
     PUSHED_SPEED_KMPH = 20       # Km / Hour                       #팅겨지기 원하는 속도
     PUSHED_SPEED_MPM = (PUSHED_SPEED_KMPH * 1000.0 / 60.0)
     PUSHED_SPEED_MPS = (PUSHED_SPEED_MPM / 60.0)
@@ -106,7 +106,7 @@ class Boy:
 
         self.bgm.set_volume(64)
         self.bgm_state = self.SOUND_PLAY
-        Boy.bgm.repeat_play()
+        #Boy.bgm.repeat_play()
 
 
     def return_hitbox(self):
@@ -117,7 +117,7 @@ class Boy:
 
     #업데이트
     def update(self, frame_time):
-        if(self.pushed_meter > 0):
+        if(self.pushed == True):
             self._pushed(frame_time)
 
         elif(self.x_dir != 0):
@@ -126,7 +126,7 @@ class Boy:
         if(self.invincible == True ):
             self._invincible(frame_time)
 
-        if(self.stand_hang == True):
+        if(self.stand_hang == True ):
             self._hang(frame_time)
 
         if(self.jump == True):
@@ -150,6 +150,7 @@ class Boy:
     def _pushed(self, frame_time):
         distance = Boy.PUSHED_SPEED_PPS * frame_time
         self.cur_pushed_meter += distance
+        #self.invincible_sprite = 400
 
         #밀어낼려는 미터보다 크거나 같은 경우
         if(self.cur_pushed_meter >= self.PUSHED_MAX_METER):
@@ -174,6 +175,7 @@ class Boy:
             self.invincible_time = 0
             self.invincible_sprite = 0
 
+
     def _fall(self, frame_time):
 
         distance = Boy.FALL_SPEED_PPS * frame_time
@@ -187,21 +189,21 @@ class Boy:
             self.state = self.RIGHT_JUMP
 
     def _hang(self, frame_time):
-        if(self.can_hang == True ):
+         #매달리기 상태에서 밀어내긱 일어날 경우
+        if self.pushed == True:
+            self.can_hang = False
+            if(self.pushed_dir < 0):
+                 self.state = self.RIGHT_JUMP
+            elif (self.pushed_dir > 0):
+                self.state = self.LEFT_JUMP
+
+        elif(self.can_hang == True ):
             self.fall = False
             self.x = self.rope_x_pos
 
             #만약 이동중 매달리기 상태로 변했을 경우
             if(self.x_dir != 0):
                 self.hang_x_dir = self.x_dir
-
-            #매달리기 상태에서 밀어내긱 일어날 경우
-            if self.pushed == True:
-                self.can_hang = False
-                if(self.pushed_dir < 0):
-                    self.state = self.RIGHT_JUMP
-                elif (self.pushed_dir > 0):
-                    self.state = self.LEFT_JUMP
 
             #나머지 상태
             else:
@@ -281,12 +283,13 @@ class Boy:
         if top_boy < bottom_obstacle : obstacle_crush = False
         if bottom_boy > top_obstacle : obstacle_crush = False
 
-        if self.x < int((left_obstacle + right_obstacle) / 2):
-            self.pushed_dir = -1
-        else:
-            self.pushed_dir = 1
 
         if(obstacle_crush == True and self.pushed == False and self.invincible == False):
+            if self.x > (left_obstacle + right_obstacle) / 2:
+                self.pushed_dir = 1
+            elif self.x < (left_obstacle + right_obstacle) / 2:
+                self.pushed_dir = -1
+
             self.pushed_meter = self.PUSHED_MAX_METER
             self.pushed = True
 
@@ -460,8 +463,8 @@ class Boy:
         self.hang_y_dir = 0
 
     def _initalize_pos(self):
-        self.x, self.y = 0, 200
-        self.x_scrolling, self.y_scrolling = 0, 0
+        self.x, self.y = 150, 1300
+        self.x_scrolling = 0
 
 
 

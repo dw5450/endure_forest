@@ -25,9 +25,16 @@
 	"rope54" : {"StartState":"BOTTOM_EDGE", "x":650, "y" :450},
 	"rope55" : {"StartState":"TOP_EDGE", "x":650, "y" :550},
 
-	"rope92" : {"StartState":"BOTTOM_EDGE", "x":950, "y" :250},
- 	"rope93" : {"StartState":"NON_EDGE", "x":950, "y" :350},
+ 	"rope93" : {"StartState":"BOTTOM_EDGE", "x":950, "y" :350},
  	"rope94" : {"StartState":"TOP_EDGE", "x":950, "y" :450},
+
+ 	"rope96" : {"StartState":"BOTTOM_EDGE", "x":950, "y" :650},
+ 	"rope97" : {"StartState":"NON_EDGE", "x":950, "y" :750},
+ 	"rope98" : {"StartState":"TOP_EDGE", "x":950, "y" :850},
+
+ 	"rope79" : {"StartState":"BOTTOM_EDGE", "x":750, "y" :950},
+ 	"rope710." : {"StartState":"NON_EDGE", "x":750, "y" :1050},
+ 	"rope711." : {"StartState":"TOP_EDGE", "x":750, "y" :1150},
 
 
 	"rope.1010." : {"StartState":"BOTTOM_EDGE", "x":1050, "y" :1050},
