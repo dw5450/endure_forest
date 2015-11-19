@@ -17,6 +17,7 @@ boy = None
 lupins = []
 footholds = []
 ropes = []
+current_time =0
 frame_time = 0
 
 def enter():
@@ -36,6 +37,8 @@ def enter():
     lupins = function_folder.Load_map_object.load_lupin()
     for lupin in lupins:
         lupin.set_player(boy)
+
+    current_time = get_time()
 
 
 def exit():
@@ -76,7 +79,8 @@ def handle_events(frame_time):
 
 def update(frame_time):
     # fill here
-    frame_time+=0.01
+    global current_time
+    frame_time = get_time() - current_time
     boy.update(frame_time)
     for lupin in lupins:
         lupin.update(frame_time)
@@ -94,9 +98,7 @@ def update(frame_time):
         boy.obstacle_crush(lupin.return_lupin_hitbox())
         boy.obstacle_crush(lupin.return_banana_hibox())
 
-
-
-    delay(0.01)
+    current_time += frame_time
 
 def draw(frame_time):
     # fill here
