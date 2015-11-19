@@ -9,6 +9,6 @@
 	"foothold9" : {"StartState":"NON_EDGE", "x":950, "y" :50},
 	"foothold10" : {"StartState":"EDGE", "x":1050, "y" :50},
 	"foothold11" : {"StartState":"EDGE", "x":250, "y" :350},
-	"foothold11" : {"StartState":"EDGE", "x":450, "y" :150},
+	"foothold11" : {"StartState":"NON_EDGE", "x":450, "y" :150},
 	"foothold12" : {"StartState":"EDGE", "x":250, "y" :350}
 }

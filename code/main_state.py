@@ -95,8 +95,9 @@ def update(frame_time):
 
     boy.pushed = False
     for lupin in lupins:
-        boy.obstacle_crush(lupin.return_lupin_hitbox())
         boy.obstacle_crush(lupin.return_banana_hibox())
+        boy.obstacle_crush(lupin.return_lupin_hitbox())
+
 
     current_time += frame_time
 

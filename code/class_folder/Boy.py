@@ -23,7 +23,7 @@ class Boy:
     JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
     JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
 
-    PUSHED_MAX_METER = 40                                          #팅겨지기 원하는 거리
+    PUSHED_MAX_METER = 60                                          #팅겨지기 원하는 거리
     PUSHED_SPEED_KMPH = 20       # Km / Hour                       #팅겨지기 원하는 속도
     PUSHED_SPEED_MPM = (PUSHED_SPEED_KMPH * 1000.0 / 60.0)
     PUSHED_SPEED_MPS = (PUSHED_SPEED_MPM / 60.0)
@@ -61,6 +61,7 @@ class Boy:
         self.pushed = False
         self.pushed_meter = 0
         self.cur_pushed_meter = 0
+        self.pushed_dir = 0
 
         # 매달리기 관련 변수
         self.rope_x_pos = 0
@@ -112,11 +113,11 @@ class Boy:
         if(self.state in (self.LEFT_LIE, self.RIGHT_LIE)):
             return self.x - 30, self.y -30, self.x + 30, self.y
         else:
-            return self.x - 30, self.y -30, self.x + 30, self.y + 30
+            return self.x - 20, self.y -30, self.x + 20, self.y + 30
 
     #업데이트
     def update(self, frame_time):
-        if(self.pushed_meter > 0 and self.invincible == False ):
+        if(self.pushed_meter > 0):
             self._pushed(frame_time)
 
         elif(self.x_dir != 0):
@@ -143,21 +144,22 @@ class Boy:
         if self.jump_sound_state == self.SOUND_NONE_PLAY:
             self.bgm.resume()
 
+        if(self.y < 30):
+            self._initalize_pos()
+
     def _pushed(self, frame_time):
         distance = Boy.PUSHED_SPEED_PPS * frame_time
         self.cur_pushed_meter += distance
-        if(self.cur_pushed_meter > self.pushed_meter):
+
+        #밀어낼려는 미터보다 크거나 같은 경우
+        if(self.cur_pushed_meter >= self.PUSHED_MAX_METER):
             self.pushed = False
-            self.cur_pushed_meter = 0
             self.pushed_meter = 0
+            self.cur_pushed_meter = 0
             self.invincible = True
             distance -= self.cur_pushed_meter - self.pushed_meter
 
-        if(self.state in (self.RIGHT_STAND, self.RIGHT_RUN, self.RIGHT_JUMP)):
-            self.x -= distance
-
-        if(self.state in (self.LEFT_STAND, self.LEFT_RUN, self.LEFT_JUMP)):
-            self.x += distance
+        self.x += self.pushed_dir * distance
 
     def _move_x(self, frame_time):
         distance = Boy.RUN_SPEED_PPS * frame_time
@@ -188,15 +190,26 @@ class Boy:
         if(self.can_hang == True):
             self.fall = False
             self.x = self.rope_x_pos
+
+            #만약 이동중 매달리기 상태로 변했을 경우
             if(self.x_dir != 0):
                 self.hang_x_dir = self.x_dir
-            self.x_dir = 0
-            self.state = self.HANG
-            self.hang = True
-            distance = Boy.RUN_SPEED_PPS * frame_time
 
-            self.y += self.hang_y_dir * distance
-            self.jump_max_point =  self.y + self.JUMP_HIGHT
+            #매달리기 상태에서 밀어내긱 일어날 경우
+            if self.pushed == True:
+                self.can_hang = False
+                if(self.pushed_dir < 0):
+                    self.state = self.RIGHT_JUMP
+                elif (self.pushed_dir > 0):
+                    self.state = self.LEFT_JUMP
+
+            #나머지 상태
+            else:
+                self.x_dir = 0
+                self.state = self.HANG
+                self.hang = True
+                distance = Boy.RUN_SPEED_PPS * frame_time
+                self.y += self.hang_y_dir * distance
 
         if(self.hang == True and self.can_hang == False):
             self.x_dir = self.hang_x_dir
@@ -244,8 +257,6 @@ class Boy:
 
             self.y_dir = 0
 
-
-
     def rope_crush(self, rope_hitbox):
         left_boy, bottom_boy, right_boy, top_boy = self.return_hitbox()
         left_rope, bottom_rope, right_rope, top_rope = rope_hitbox
@@ -269,6 +280,11 @@ class Boy:
         if right_boy < left_obstacle : obstacle_crush = False
         if top_boy < bottom_obstacle : obstacle_crush = False
         if bottom_boy > top_obstacle : obstacle_crush = False
+
+        if self.x < int((left_obstacle + right_obstacle) / 2):
+            self.pushed_dir = -1
+        else:
+            self.pushed_dir = 1
 
         if(obstacle_crush == True and self.pushed == False and self.invincible == False):
             self.pushed_meter = self.PUSHED_MAX_METER
@@ -361,6 +377,13 @@ class Boy:
             if self.state in (self.RIGHT_STAND, self.LEFT_STAND, self.RIGHT_RUN, self.LEFT_RUN, self.HANG):
                 self._handle_jump()
 
+        if (event.type, event.key) == (SDL_KEYDOWN, SDLK_i):
+            if self.state in (self.RIGHT_STAND, self.LEFT_STAND, self.RIGHT_RUN, self.LEFT_RUN, self.HANG):
+                self._initalize_pos()
+
+
+
+
     def _handle_right_run(self):
 
         if(self.hang == True):
@@ -436,6 +459,9 @@ class Boy:
             self.hang = False
 
         self.hang_y_dir = 0
+
+    def _initalize_pos(self):
+        self.x, self.y = 0, 200
 
 
 
