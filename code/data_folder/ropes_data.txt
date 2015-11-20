@@ -32,13 +32,10 @@
  	"rope97" : {"StartState":"NON_EDGE", "x":950, "y" :750},
  	"rope98" : {"StartState":"TOP_EDGE", "x":950, "y" :850},
 
- 	"rope79" : {"StartState":"BOTTOM_EDGE", "x":750, "y" :950},
- 	"rope710." : {"StartState":"NON_EDGE", "x":750, "y" :1050},
- 	"rope711." : {"StartState":"TOP_EDGE", "x":750, "y" :1150},
-
-
-	"rope.1010." : {"StartState":"BOTTOM_EDGE", "x":1050, "y" :1050},
-	"rope.1011." : {"StartState":"TOP_EDGE", "x":1050, "y" :1150}
+ 	"rope89" : {"StartState":"BOTTOM_EDGE", "x":850, "y" :950},
+ 	"rope810." : {"StartState":"NON_EDGE", "x":850, "y" :1050},
+ 	"rope811." : {"StartState":"NON_EDGE", "x":850, "y" :1150},
+ 	"rope812." : {"StartState":"TOP_EDGE", "x":850, "y" :1250}
 
 
 
