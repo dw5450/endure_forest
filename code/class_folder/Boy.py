@@ -23,7 +23,7 @@ class Boy:
     JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
     JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
 
-    PUSHED_MAX_METER = 60                                          #팅겨지기 원하는 거리
+    PUSHED_MAX_METER = 80                                          #팅겨지기 원하는 거리
     PUSHED_SPEED_KMPH = 20       # Km / Hour                       #팅겨지기 원하는 속도
     PUSHED_SPEED_MPM = (PUSHED_SPEED_KMPH * 1000.0 / 60.0)
     PUSHED_SPEED_MPS = (PUSHED_SPEED_MPM / 60.0)
@@ -37,7 +37,9 @@ class Boy:
 
     image = None
     bgm = None
+    run_sound = None
     jump_sound = None
+    pushed_sound = None
 
     LEFT_RUN, RIGHT_RUN = 0, 1
     LEFT_STAND, RIGHT_STAND = 0, 1
@@ -56,6 +58,10 @@ class Boy:
         self.x_dir = 0
         self.y_dir = 0
         self.fall = False
+        if(Boy.run_sound == None):
+            Boy.run_sound = load_wav('sound_folder//stonewalk_01.wav')
+            Boy.run_sound.set_volume(128)
+            Boy.run_sound_cnt = 0
 
         #방해물 충돌 관련 변수
         self.pushed = False
@@ -72,6 +78,10 @@ class Boy:
         self.hang_y_dir = 0
         self.hang_x_dir = 0
 
+        if(Boy.pushed_sound == None):
+            Boy.pushed_sound = load_wav('sound_folder//gourd_hit_01.wav')
+            Boy.pushed_sound.set_volume(128)
+
         #무적 관련 함수
         self.invincible = False
         self.invincible_sprite = 0
@@ -86,8 +96,9 @@ class Boy:
         self.jump = 0
         self.jump_sound_state = Boy.SOUND_NONE_PLAY
         if Boy.jump_sound == None:
-            self.jump_sound = load_music('sound_folder//walk_vine.mp3')
-            self.jump_sound.set_volume(128)
+            Boy.jump_sound = load_wav('sound_folder//walk_floor_01.wav')
+            Boy.jump_sound.set_volume(128)
+
 
         #프레임 관련 변수
         self.frame = 0
@@ -100,12 +111,7 @@ class Boy:
         if Boy.image == None:
             Boy.image = load_image('image_folder//character_sprite.png')
 
-        #ui
-        if Boy.bgm == None:
-            Boy.bgm = load_music('sound_folder//forest_bgm.mp3')
 
-        self.bgm.set_volume(64)
-        self.bgm_state = self.SOUND_PLAY
         #Boy.bgm.repeat_play()
 
 
@@ -140,9 +146,6 @@ class Boy:
         self._canvas_crush()
 
         self._set_frame(frame_time)
-
-        if self.jump_sound_state == self.SOUND_NONE_PLAY:
-            self.bgm.resume()
 
         if(self.y < 30):
             self._initalize_pos()
@@ -285,6 +288,8 @@ class Boy:
 
 
         if(obstacle_crush == True and self.pushed == False and self.invincible == False):
+            self.pushed_sound.play()
+
             if self.x > (left_obstacle + right_obstacle) / 2:
                 self.pushed_dir = 1
             elif self.x < (left_obstacle + right_obstacle) / 2:
@@ -322,11 +327,16 @@ class Boy:
         elif (self.state == self.RIGHT_JUMP or self.state == self.LEFT_JUMP):
             self.total_frames = 0
 
-
         if (self.state == self.HANG and self.hang_y_dir == 0):
             self.frame = 0
 
         else : self.total_frames += Boy.FRAMES_PER_ACTION * Boy.ACTION_PER_TIME * frame_time
+
+        if(self.frame % 4 == 1 and self.state in (self.LEFT_RUN, self.RIGHT_RUN) and self.run_sound_cnt == 0):
+            self.run_sound.play()
+            self.run_sound_cnt +=1
+        elif self.frame %4 == 3:
+            self.run_sound_cnt = 0
 
         self.frame = int(self.total_frames) % 4
 
@@ -388,7 +398,7 @@ class Boy:
 
         if(self.hang == True):
             self.hang_x_dir = 1
-        else:
+        elif self.fall == False:
             self.x_dir = 1
             self.state = self.RIGHT_RUN
 
@@ -401,7 +411,7 @@ class Boy:
 
         if(self.hang == True):
             self.hang_x_dir = -1
-        else:
+        elif self.fall == False:
             self.x_dir = -1
             self.state = self.LEFT_RUN
 
@@ -412,10 +422,7 @@ class Boy:
 
     def _handle_jump(self):
         if(self.jump == False):
-            self.bgm_state = self.SOUND_PAUSE
-
-            #self.jump_sound.play()
-            #self.jump_sound_state = self.SOUND_PLAY
+            self.jump_sound.play()
             self.jump = True
 
         if(self.hang == True):

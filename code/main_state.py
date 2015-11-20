@@ -4,6 +4,7 @@ import game_framework
 
 import title_state
 
+import class_folder.UI
 import class_folder.Boy
 import class_folder.Lupin
 import class_folder.Foothold
@@ -13,6 +14,7 @@ import function_folder.Load_map_object
 import function_folder.canvas_property
 
 draw_hitbox = False
+UI = None
 boy = None
 lupins = []
 footholds = []
@@ -22,8 +24,10 @@ frame_time = 0
 
 def enter():
     # fill here
-    global boy, lupins, footholds, ropes
+    global ui, boy, lupins, footholds, ropes
 
+
+    ui = class_folder.UI.UI()
     boy = class_folder.Boy.Boy()
 
     footholds = function_folder.Load_map_object.load_foothold()
@@ -105,7 +109,7 @@ def draw(frame_time):
     global draw_hitbox
     clear_canvas()
     function_folder.canvas_property.draw_background(boy)
-
+    ui.draw()
     for foothold in footholds:
         foothold.draw()
         if(draw_hitbox == True):
