@@ -153,7 +153,7 @@ class Boy:
     def _pushed(self, frame_time):
         distance = Boy.PUSHED_SPEED_PPS * frame_time
         self.cur_pushed_meter += distance
-        #self.invincible_sprite = 400
+        self.invincible_sprite = 400
 
         #밀어낼려는 미터보다 크거나 같은 경우
         if(self.cur_pushed_meter >= self.PUSHED_MAX_METER):
@@ -341,7 +341,7 @@ class Boy:
         self.frame = int(self.total_frames) % 4
 
     def draw(self):
-        self.image.clip_draw((self.frame) * 100 + self. invincible_sprite, self.state * 100, 100, 100, self.x - self.x_scrolling, self.y - self.y_scrolling)
+        self.image.clip_draw((self.frame) * 100 + self.invincible_sprite, self.state * 100, 100, 100, self.x - self.x_scrolling, self.y - self.y_scrolling)
 
     def draw_hitbox(self):
         draw_rectangle(self.return_hitbox()[0] -self.x_scrolling, self.return_hitbox()[1] -self.y_scrolling,
@@ -401,6 +401,7 @@ class Boy:
         elif self.fall == False:
             self.x_dir = 1
             self.state = self.RIGHT_RUN
+            self.run_sound_cnt = 0
 
     def _handle_right_stand(self):
         self.x_dir = 0
@@ -414,6 +415,7 @@ class Boy:
         elif self.fall == False:
             self.x_dir = -1
             self.state = self.LEFT_RUN
+            self.run_sound_cnt = 0
 
     def _handle_left_stand(self):
         self.x_dir = 0
@@ -443,8 +445,6 @@ class Boy:
             self.state = self.LEFT_LIE
 
         self.x_dir = 0
-
-        self.bgm.resume()
 
     def _handle_rise(self):
         if (self.state == self.RIGHT_LIE):
