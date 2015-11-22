@@ -3,12 +3,14 @@ from pico2d import *
 import game_framework
 
 import title_state
+import end_state
 
 import class_folder.UI
 import class_folder.Boy
 import class_folder.Lupin
 import class_folder.Foothold
 import class_folder.Rope
+from class_folder.Portal import Portal
 
 import function_folder.Load_map_object
 import function_folder.canvas_property
@@ -16,6 +18,7 @@ import function_folder.canvas_property
 draw_hitbox = False
 UI = None
 boy = None
+portal = None
 lupins = []
 footholds = []
 ropes = []
@@ -24,7 +27,7 @@ frame_time = 0
 
 def enter():
     # fill here
-    global ui, boy, lupins, footholds, ropes
+    global ui, boy, lupins, footholds, ropes, portal
 
 
     ui = class_folder.UI.UI()
@@ -42,6 +45,9 @@ def enter():
     for lupin in lupins:
         lupin.set_player(boy)
 
+    portal = Portal()
+    portal.set_player(boy)
+
     current_time = get_time()
 
 
@@ -53,7 +59,6 @@ def exit():
     del(lupins)
     del(boy)
     close_canvas()
-    game_framework.pop_state()
 
 def pause():
     pass
@@ -85,7 +90,9 @@ def update(frame_time):
     # fill here
     global current_time
     frame_time = get_time() - current_time
+
     boy.update(frame_time)
+
     for lupin in lupins:
         lupin.update(frame_time)
 
@@ -101,12 +108,20 @@ def update(frame_time):
         boy.obstacle_crush(lupin.return_banana_hibox())
         boy.obstacle_crush(lupin.return_lupin_hitbox())
 
+    boy.portal_crush(portal.return_hitbox())
+
+    if boy.cross_portal() == True:
+        game_framework.change_state(end_state)
+
+    portal.update(frame_time)
+
 
     current_time += frame_time
 
 def draw(frame_time):
     # fill here
     global draw_hitbox
+
     clear_canvas()
     function_folder.canvas_property.draw_background(boy)
     ui.draw()
@@ -125,6 +140,10 @@ def draw(frame_time):
         if(draw_hitbox == True):
             lupin.draw_lupin_hitbox()
             lupin.draw_banana_hibox()
+
+    portal.draw()
+    if(draw_hitbox == True):
+        portal.draw_hitbox()
 
     boy.draw()
     if(draw_hitbox == True):

@@ -80,7 +80,7 @@ class Boy:
 
         if(Boy.pushed_sound == None):
             Boy.pushed_sound = load_wav('sound_folder//gourd_hit_01.wav')
-            Boy.pushed_sound.set_volume(128)
+            Boy.pushed_sound.set_volume(64)
 
         #무적 관련 함수
         self.invincible = False
@@ -97,7 +97,7 @@ class Boy:
         self.jump_sound_state = Boy.SOUND_NONE_PLAY
         if Boy.jump_sound == None:
             Boy.jump_sound = load_wav('sound_folder//walk_floor_01.wav')
-            Boy.jump_sound.set_volume(128)
+            Boy.jump_sound.set_volume(64)
 
 
         #프레임 관련 변수
@@ -112,8 +112,9 @@ class Boy:
             Boy.image = load_image('image_folder//character_sprite.png')
 
 
-        #Boy.bgm.repeat_play()
-
+        #포탈 관련 변수
+            self.stand_cross_portal = False
+            self.can_cross_portal = False
 
     def return_hitbox(self):
         if(self.state in (self.LEFT_LIE, self.RIGHT_LIE)):
@@ -177,7 +178,6 @@ class Boy:
             self.invincible = False
             self.invincible_time = 0
             self.invincible_sprite = 0
-
 
     def _fall(self, frame_time):
 
@@ -298,6 +298,21 @@ class Boy:
             self.pushed_meter = self.PUSHED_MAX_METER
             self.pushed = True
 
+    def portal_crush(self, portal_hitbox):
+        left_boy, bottom_boy, right_boy, top_boy = self.return_hitbox()
+        left_portal, bottom_portal, right_portal, top_portal = portal_hitbox
+
+        if left_boy > right_portal: self.can_cross_portal = False
+        elif right_boy < left_portal : self.can_cross_portal = False
+        elif top_boy < bottom_portal : self.can_cross_portal = False
+        elif bottom_boy > top_portal : self.can_cross_portal = False
+        else: self.can_cross_portal = True
+
+    def cross_portal(self):
+        if(self.can_cross_portal == True and self.stand_cross_portal == True):
+            return True
+        else : return False
+
     def _jump(self, frame_time):
 
         #점프 모션 설정
@@ -368,9 +383,11 @@ class Boy:
         if (event.type, event.key) == (SDL_KEYDOWN, SDLK_UP):
             if self.state in (self.RIGHT_STAND, self.LEFT_STAND, self.RIGHT_RUN, self.LEFT_RUN, self.HANG, self.LEFT_JUMP, self.RIGHT_JUMP):
                 self._handle_up_hang()
+            self.stand_cross_portal = True
         elif (event.type, event.key) == (SDL_KEYUP, SDLK_UP):
             if self.state == self.HANG:
                 self._handle_hang_False()
+            self.stand_cross_portal = False
 
         #아래쪽 방향키 입력
         if (event.type, event.key) == (SDL_KEYDOWN, SDLK_DOWN):
@@ -470,7 +487,7 @@ class Boy:
         self.hang_y_dir = 0
 
     def _initalize_pos(self):
-        self.x, self.y = 150, 1300
+        self.x, self.y = 550 , 1300
         self.x_scrolling = 0
 
 

@@ -57,7 +57,9 @@
 	"foothold011." : {"StartState":"EDGE", "x":50, "y" :1150},
 	"foothold111." : {"StartState":"EDGE", "x":150, "y" :1150},
 	"foothold211." : {"StartState":"NON_EDGE", "x":250, "y" :1150},
+
 	"foothold511." : {"StartState":"NON_EDGE", "x":550, "y" :1150},
+
 	"foothold711." : {"StartState":"NON_EDGE", "x":750, "y" :1150},
 	"foothold.0911." : {"StartState":"NON_EDGE", "x":950, "y" :1150},
 	"foothold.1011." : {"StartState":"NON_EDGE", "x":1050, "y" :1150},

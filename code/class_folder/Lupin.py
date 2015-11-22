@@ -1,5 +1,6 @@
 __author__ = 'no_game'
 
+from function_folder.canvas_property import *
 from pico2d import *
 
 
@@ -61,7 +62,7 @@ class Lupin:
          return self.x -40, self.y - 40, self.x + 40, self.y + 50
 
     def return_banana_hibox(self):
-        return self.banana_x - 20, self.banana_y - 10, self.banana_x + 20, self.banana_y + 10
+        return self.banana_x - 10, self.banana_y - 10, self.banana_x + 10, self.banana_y + 10
 
     def draw_lupin_hitbox(self):
         draw_rectangle(self.return_lupin_hitbox()[0] -self.player.x_scrolling, self.return_lupin_hitbox()[1] -self.player.y_scrolling,
@@ -73,8 +74,9 @@ class Lupin:
 
     def draw(self):
         # fill here
-        self.lupin_image.clip_draw((self.frame) * 100, self.state * 100, 100, 100,self.x - self.player.x_scrolling , self.y - self.player.y_scrolling)
-        if(self.throw_banana == True):
+        if( self.x - self.player.x_scrolling < canvas_width + 50 and self.y - self.player.y_scrolling < canvas_height + 50):
+            self.lupin_image.clip_draw((self.frame) * 100, self.state * 100, 100, 100,self.x - self.player.x_scrolling , self.y - self.player.y_scrolling)
+        if(self.throw_banana == True  and self.banana_x - self.player.x_scrolling < canvas_width + 50 and self.banana_y - self.player.y_scrolling < canvas_height + 50):
             self.banana_image.clip_draw((self.banana_frame) * 50, self.state * 50, 40, 50, self.banana_x - self.player.x_scrolling,  self.banana_y  - self.player.y_scrolling)
 
     def update(self, frame_time):
