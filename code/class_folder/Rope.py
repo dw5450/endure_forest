@@ -3,6 +3,8 @@ __author__ = 'no_game'
 
 from pico2d import *
 
+from function_folder.canvas_property import *
+
 class Rope:
 
     BOTTOM_EDGE, NON_EDGE, TOP_EDGE = 0, 1, 2
@@ -37,8 +39,15 @@ class Rope:
 
 
     def draw(self):
-        self.image.clip_draw((self.state) * 100, 100, 100, 100, self.x - self.player.x_scrolling, self.y -self.player.y_scrolling)
+        if( self.x - self.player.x_scrolling < canvas_width + 50 and self.y - self.player.y_scrolling < canvas_height + 50):
+            self.image.clip_draw((self.state) * 100, 100, 100, 100, self.x - self.player.x_scrolling, self.y -self.player.y_scrolling)
 
     def draw_hitbox(self):
-        draw_rectangle(self.return_hitbox()[0] -self.player.x_scrolling, self.return_hitbox()[1] -self.player.y_scrolling,
+        if( self.x - self.player.x_scrolling < canvas_width + 50 and self.y - self.player.y_scrolling < canvas_height + 50):
+            draw_rectangle(self.return_hitbox()[0] -self.player.x_scrolling, self.return_hitbox()[1] -self.player.y_scrolling,
                        self.return_hitbox()[2] -self.player.x_scrolling, self.return_hitbox()[3] -self.player.y_scrolling)
+
+    def crush_optimization(self):
+        if(self.player.x - 100 < self.x < self.player.x + 100 and self.player.y - 100 < self.y < self.player.y + 100 ):
+            return True
+        else: return False

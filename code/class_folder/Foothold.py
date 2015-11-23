@@ -39,4 +39,7 @@ class Foothold:
             draw_rectangle(self.return_hitbox()[0] -self.player.x_scrolling, self.return_hitbox()[1] -self.player.y_scrolling,
                        self.return_hitbox()[2] -self.player.x_scrolling, self.return_hitbox()[3] -self.player.y_scrolling)
 
-    #def optimization(self):
+    def crush_optimization(self):
+        if(self.player.x - 100 < self.x < self.player.x + 100 and self.player.y - 100 < self.y < self.player.y + 100 ):
+            return True
+        else: return False
