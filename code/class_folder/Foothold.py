@@ -38,3 +38,5 @@ class Foothold:
         if( self.x - self.player.x_scrolling < canvas_width + 50 and self.y - self.player.y_scrolling < canvas_height + 50):
             draw_rectangle(self.return_hitbox()[0] -self.player.x_scrolling, self.return_hitbox()[1] -self.player.y_scrolling,
                        self.return_hitbox()[2] -self.player.x_scrolling, self.return_hitbox()[3] -self.player.y_scrolling)
+
+    #def optimization(self):

@@ -148,8 +148,8 @@ class Boy:
 
         self._set_frame(frame_time)
 
-        if(self.y < 30):
-            self._initalize_pos()
+        if(self.y < 90):
+            self.y = 90
 
     def _pushed(self, frame_time):
         distance = Boy.PUSHED_SPEED_PPS * frame_time
@@ -169,6 +169,10 @@ class Boy:
     def _move_x(self, frame_time):
         distance = Boy.RUN_SPEED_PPS * frame_time
         self.x += (self.x_dir * distance)
+        if(self.state == self.LEFT_RUN and self.x_dir == 1):
+            self.state = self.RIGHT_RUN
+        elif (self.state == self.RIGHT_RUN and self.x_dir == -1):
+            self.state = self.LEFT_RUN
 
     def _invincible(self, frame_time):
         self.invincible_time +=frame_time;
@@ -268,9 +272,9 @@ class Boy:
 
         rope_crush = True
         if left_boy > right_rope: rope_crush = False
-        if right_boy < left_rope : rope_crush = False
-        if top_boy < bottom_rope : rope_crush = False
-        if bottom_boy > top_rope : rope_crush = False
+        elif right_boy < left_rope : rope_crush = False
+        elif top_boy < bottom_rope : rope_crush = False
+        elif bottom_boy > top_rope : rope_crush = False
 
         if(rope_crush == True):
             self.can_hang = True
@@ -282,9 +286,9 @@ class Boy:
 
         obstacle_crush = True
         if left_boy > right_obstacle: obstacle_crush = False
-        if right_boy < left_obstacle : obstacle_crush = False
-        if top_boy < bottom_obstacle : obstacle_crush = False
-        if bottom_boy > top_obstacle : obstacle_crush = False
+        elif right_boy < left_obstacle : obstacle_crush = False
+        elif top_boy < bottom_obstacle : obstacle_crush = False
+        elif bottom_boy > top_obstacle : obstacle_crush = False
 
 
         if(obstacle_crush == True and self.pushed == False and self.invincible == False):
@@ -407,10 +411,6 @@ class Boy:
             if self.state in (self.RIGHT_STAND, self.LEFT_STAND, self.RIGHT_RUN, self.LEFT_RUN, self.HANG):
                 self._handle_jump()
 
-        if (event.type, event.key) == (SDL_KEYDOWN, SDLK_i):
-            if self.state in (self.RIGHT_STAND, self.LEFT_STAND, self.RIGHT_RUN, self.LEFT_RUN, self.HANG):
-                self._initalize_pos()
-
     def _handle_right_run(self):
 
         if(self.hang == True):
@@ -486,9 +486,6 @@ class Boy:
 
         self.hang_y_dir = 0
 
-    def _initalize_pos(self):
-        self.x, self.y = 550 , 1300
-        self.x_scrolling = 0
 
 
 

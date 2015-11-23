@@ -4,10 +4,10 @@ import random
 import json
 from pico2d import *
 
-import class_folder.Lupin
-import class_folder.Foothold
-import class_folder.Rope
-import class_folder.Boy
+from class_folder.Lupin import Lupin
+from class_folder.Rope import Rope
+from class_folder.Foothold import Foothold
+from class_folder.Boy import Boy
 
 def load_lupin():
     lupin_data_file = open('data_folder//lupins_data.txt', 'r')
@@ -15,13 +15,13 @@ def load_lupin():
     lupin_data_file.close()
 
     lupin_state_table = {
-        "RIGHT_THROW" : class_folder.Lupin.Lupin.RIGHT_THROW,
-        "LEFT_THROW" : class_folder.Lupin.Lupin.LEFT_THROW
+        "RIGHT_THROW" : Lupin.RIGHT_THROW,
+        "LEFT_THROW" : Lupin.LEFT_THROW
     }
 
     lupins = []
     for name in lupin_data:
-        lupin = class_folder.Lupin.Lupin()
+        lupin = Lupin()
         lupin.name = name
         lupin.x = lupin_data[name]['x']
         lupin.y = lupin_data[name]['y'] + 60
@@ -37,13 +37,13 @@ def load_foothold():
     foothold_data_file.close()
 
     foothold_state_table = {
-        "EDGE" : class_folder.Foothold.Foothold.EDGE,
-        "NON_EDGE" : class_folder.Foothold.Foothold.NON_EDGE
+        "EDGE" : Foothold.EDGE,
+        "NON_EDGE" : Foothold.NON_EDGE
     }
 
     footholds = []
     for name in foothold_data:
-        foothold = class_folder.Foothold.Foothold()
+        foothold = Foothold()
         foothold.name = name
         foothold.x = foothold_data[name]['x']
         foothold.y = foothold_data[name]['y']
@@ -58,14 +58,14 @@ def load_rope():
     rope_data_file.close()
 
     foothold_state_table = {
-        "BOTTOM_EDGE" : class_folder.Rope.Rope.BOTTOM_EDGE,
-        "NON_EDGE" : class_folder.Rope.Rope.NON_EDGE,
-        "TOP_EDGE" : class_folder.Rope.Rope.TOP_EDGE
+        "BOTTOM_EDGE" : Rope.BOTTOM_EDGE,
+        "NON_EDGE" : Rope.NON_EDGE,
+        "TOP_EDGE" : Rope.TOP_EDGE
     }
 
     ropes = []
     for name in rope_data:
-        rope = class_folder.Rope.Rope()
+        rope = Rope()
         rope.x = rope_data[name]['x']
         rope.y = rope_data[name]['y']
         rope.state = foothold_state_table[rope_data[name]['StartState']]

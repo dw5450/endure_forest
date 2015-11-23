@@ -46,6 +46,10 @@ def handle_events(frame_time):
         elif event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
             if 370 < event.x and event.x < 460 and 190 < 600 - event.y and 600 - event.y < 230:
                 game_framework.push_state(main_state)
+            elif 600 < event.x and event.x < 675 and 190 < 600 - event.y and 600 - event.y < 230:
+                exit()
+
+
 
 def update(frame_time):
     pass

@@ -5,18 +5,18 @@ import game_framework
 import title_state
 import end_state
 
-import class_folder.UI
-import class_folder.Boy
-import class_folder.Lupin
-import class_folder.Foothold
-import class_folder.Rope
+from class_folder.Boy import Boy
+from class_folder.Foothold import Foothold
 from class_folder.Portal import Portal
+from class_folder.Lupin import Lupin
+from class_folder.Rope import Rope
+from class_folder.UI import UI
 
 import function_folder.Load_map_object
 import function_folder.canvas_property
 
 draw_hitbox = False
-UI = None
+ui = None
 boy = None
 portal = None
 lupins = []
@@ -30,8 +30,8 @@ def enter():
     global ui, boy, lupins, footholds, ropes, portal
 
 
-    ui = class_folder.UI.UI()
-    boy = class_folder.Boy.Boy()
+    ui = UI()
+    boy = Boy()
 
     footholds = function_folder.Load_map_object.load_foothold()
     for foothold in footholds:
