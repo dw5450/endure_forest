@@ -22,8 +22,7 @@ portal = None
 lupins = []
 footholds = []
 ropes = []
-current_time =0
-frame_time = 0
+current_time = 0
 
 def enter():
     # fill here
@@ -76,11 +75,6 @@ def handle_events(frame_time):
              exit()
         elif(event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
              game_framework.change_state(title_state)
-        elif(event.type, event.key) == (SDL_KEYDOWN, SDLK_h):
-            if(draw_hitbox == True):
-                draw_hitbox = False
-            elif(draw_hitbox == False):
-                draw_hitbox = True
         else:
             boy.handle_event(event)
 
@@ -106,8 +100,9 @@ def update(frame_time):
             boy.foothold_crush(foothold.return_hitbox())
 
     for lupin in lupins:
-        if lupin.crush_optimization() == True:
+        if lupin.banana_crush_optimization() == True:
             boy.obstacle_crush(lupin.return_banana_hibox())
+        if lupin.lupin_crush_optimization() == True:
             boy.obstacle_crush(lupin.return_lupin_hitbox())
 
     boy.portal_crush(portal.return_hitbox())
@@ -129,27 +124,17 @@ def draw(frame_time):
     ui.draw()
     for foothold in footholds:
         foothold.draw()
-        if(draw_hitbox == True):
-            foothold.draw_hitbox()
 
     for rope in ropes:
         rope.draw()
-        if(draw_hitbox == True):
-            rope.draw_hitbox()
 
     for lupin in lupins:
         lupin.draw()
-        if(draw_hitbox == True):
-            lupin.draw_lupin_hitbox()
-            lupin.draw_banana_hibox()
 
     portal.draw()
-    if(draw_hitbox == True):
-        portal.draw_hitbox()
+
 
     boy.draw()
-    if(draw_hitbox == True):
-        boy.draw_hitbox()
 
     update_canvas()
 

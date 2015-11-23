@@ -109,7 +109,13 @@ class Lupin:
             self.banana_x = self.x
             self.throw_banana = False
 
-    def crush_optimization(self):
+    def lupin_crush_optimization(self):
         if(self.player.x - 100 < self.x < self.player.x + 100 and self.player.y - 100 < self.y < self.player.y + 100 ):
+            return True
+        else: return False
+
+
+    def banana_crush_optimization(self):
+        if(self.player.x - 100 < self.banana_x < self.player.x + 100 and self.player.y - 100 < self.banana_y < self.player.y + 100 ):
             return True
         else: return False

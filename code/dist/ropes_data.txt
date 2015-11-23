@@ -1,0 +1,42 @@
+ {
+
+ 	"rope04" : {"StartState":"BOTTOM_EDGE", "x":50, "y" :450},
+	"rope05" : {"StartState":"TOP_EDGE", "x":50, "y" :550},
+
+ 	"rope011." : {"StartState":"BOTTOM_EDGE", "x":50, "y" :850},
+ 	"rope012." : {"StartState":"NON_EDGE", "x":50, "y" :950},
+ 	"rope013." : {"StartState":"NON_EDGE", "x":50, "y" :1050},
+ 	"rope014." : {"StartState":"TOP_EDGE", "x":50, "y" :1150},
+
+ 	"rope11" : {"StartState":"BOTTOM_EDGE", "x":150, "y" :150},
+ 	"rope12" : {"StartState":"TOP_EDGE", "x":150, "y" :250},
+
+ 	"rope113." : {"StartState":"BOTTOM_EDGE", "x":150, "y" :1050},
+	"rope114." : {"StartState":"TOP_EDGE", "x":150, "y" :1150},
+
+    "rope29" : {"StartState":"BOTTOM_EDGE", "x":250, "y" :650},
+	"rope210." : {"StartState":"NON_EDGE", "x":250, "y" :750},
+	"rope211." : {"StartState":"TOP_EDGE", "x":250, "y" :850},
+
+	"rope310.  " : {"StartState":"BOTTOM_EDGE", "x":350, "y" :750},
+	"rope311.  " : {"StartState":"NON_EDGE", "x":350, "y" :850},
+	"rope312." : {"StartState":"TOP_EDGE", "x":350, "y" :950},
+
+	"rope54" : {"StartState":"BOTTOM_EDGE", "x":650, "y" :450},
+	"rope55" : {"StartState":"TOP_EDGE", "x":650, "y" :550},
+
+ 	"rope93" : {"StartState":"BOTTOM_EDGE", "x":950, "y" :350},
+ 	"rope94" : {"StartState":"TOP_EDGE", "x":950, "y" :450},
+
+ 	"rope96" : {"StartState":"BOTTOM_EDGE", "x":950, "y" :650},
+ 	"rope97" : {"StartState":"NON_EDGE", "x":950, "y" :750},
+ 	"rope98" : {"StartState":"TOP_EDGE", "x":950, "y" :850},
+
+ 	"rope89" : {"StartState":"BOTTOM_EDGE", "x":850, "y" :950},
+ 	"rope810." : {"StartState":"NON_EDGE", "x":850, "y" :1050},
+ 	"rope811." : {"StartState":"NON_EDGE", "x":850, "y" :1150},
+ 	"rope812." : {"StartState":"TOP_EDGE", "x":850, "y" :1250}
+
+
+
+}
