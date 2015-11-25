@@ -7,7 +7,6 @@ from pico2d import *
 from class_folder.Lupin import Lupin
 from class_folder.Rope import Rope
 from class_folder.Foothold import Foothold
-from class_folder.Boy import Boy
 
 def load_lupin():
     lupin_data_file = open('data_folder//lupins_data.txt', 'r')
@@ -53,6 +52,7 @@ def load_foothold():
 
 def load_rope():
 	# fill here
+
     rope_data_file = open('data_folder//ropes_data.txt', 'r')
     rope_data = json.load(rope_data_file)
     rope_data_file.close()
