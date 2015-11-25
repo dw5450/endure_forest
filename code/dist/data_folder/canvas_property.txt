@@ -1,5 +1,0 @@
-{
-    "backgraound_width" : 1600 , "backgraound_height" : 1800,
-    "canvas_width" : 800,  "canvas_height" : 600,
-    "backgraound_original_width" : 944, "backgraound_original_height" : 1080
-}

@@ -12,8 +12,8 @@ from class_folder.Lupin import Lupin
 from class_folder.Rope import Rope
 from class_folder.UI import UI
 
-import function_folder.Load_map_object
-import function_folder.canvas_property
+from function_folder.Load_map_object import *
+from function_folder.canvas_property import *
 
 draw_hitbox = False
 ui = None
@@ -31,15 +31,15 @@ def enter():
     ui = UI()
     boy = Boy()
 
-    footholds = function_folder.Load_map_object.load_foothold()
+    footholds =load_foothold()
     for foothold in footholds:
         foothold.set_player(boy)
 
-    ropes = function_folder.Load_map_object.load_rope()
+    ropes = load_rope()
     for rope in ropes:
         rope.set_player(boy)
 
-    lupins = function_folder.Load_map_object.load_lupin()
+    lupins = load_lupin()
     for lupin in lupins:
         lupin.set_player(boy)
 
@@ -120,7 +120,8 @@ def draw(frame_time):
     global draw_hitbox
 
     clear_canvas()
-    function_folder.canvas_property.draw_background(boy)
+    draw_background(boy)
+
     ui.draw()
     for foothold in footholds:
         foothold.draw()
@@ -133,6 +134,10 @@ def draw(frame_time):
 
     portal.draw()
 
+    #draw road_sign
+    draw_road_sign(boy, 650, 600, 1)
+    draw_road_sign(boy, 250, 1200, 0)
+    draw_road_sign(boy, 850, 1300, 1)
 
     boy.draw()
 

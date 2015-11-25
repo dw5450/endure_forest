@@ -31,4 +31,9 @@ def draw_background(player):
     image.clip_draw_to_origin(int(player.x_scrolling  / backgraound_width * backgraound_original_width),int(player.y_scrolling  / backgraound_height * backgraound_original_height),
                               int( backgraound_width - player.x_scrolling), int( backgraound_height - player.y_scrolling), 0, 0)
 
+def draw_road_sign(player, x, y, type):
+    image = load_image("image_folder//road_sign.PNG")
+    image.clip_draw(type* 73, 0, 73, 85, x - player.x_scrolling , y - player.y_scrolling)
+
+
 
