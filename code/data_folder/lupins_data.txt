@@ -14,7 +14,6 @@
 
 
 	"lupin28." : {"StartState":"RIGHT_THROW", "x":250, "y" :850},
-	"lupin.108" : {"StartState":"LEFT_THROW", "x":1050, "y" :850},
 	"lupin.118" : {"StartState":"LEFT_THROW", "x":1150, "y" :850},
 
 	"lupin.099" : {"StartState":"LEFT_THROW", "x":950, "y" :950},
