@@ -73,8 +73,6 @@ def handle_events(frame_time):
              exit()
         elif(event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
              exit()
-        elif(event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-             game_framework.change_state(title_state)
         else:
             boy.handle_event(event)
 
