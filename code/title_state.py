@@ -3,6 +3,7 @@ import game_framework
 from pico2d import *
 
 import main_state
+import explain_state
 
 
 name = "TitleState"
@@ -46,6 +47,8 @@ def handle_events(frame_time):
         elif event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
             if 370 < event.x and event.x < 460 and 190 < 600 - event.y and 600 - event.y < 230:
                 game_framework.push_state(main_state)
+            elif 485 < event.x and event.x < 575 and 190 < 600 - event.y and 600 - event.y < 230:
+                game_framework.push_state(explain_state)
             elif 600 < event.x and event.x < 675 and 190 < 600 - event.y and 600 - event.y < 230:
                 exit()
 
@@ -58,6 +61,7 @@ def draw(frame_time):
     # fill here
     clear_canvas()
     image.draw(400, 300)
+
     update_canvas()
 
 
