@@ -1,0 +1,35 @@
+{
+	"lupin53" : {"StartState":"RIGHT_THROW", "x":550, "y" :350},
+	"lupin.113" : {"StartState":"LEFT_THROW", "x":1050, "y" :350},
+
+	"lupin35" : {"StartState":"LEFT_THROW", "x":350, "y" :550},
+	"lupin.115" : {"StartState":"LEFT_THROW", "x":1150, "y" :550},
+
+	"lupin46" : {"StartState":"LEFT_THROW", "x":450, "y" :650},
+	"lupin66" : {"StartState":"LEFT_THROW", "x":650, "y" :650},
+	"lupin76" : {"StartState":"RIGHT_THROW", "x":650, "y" :650},
+
+	"lupin57" : {"StartState":"LEFT_THROW", "x":550, "y" :750},
+	"lupin.117" : {"StartState":"LEFT_THROW", "x":1150, "y" :750},
+
+
+	"lupin28." : {"StartState":"RIGHT_THROW", "x":250, "y" :850},
+	"lupin.118" : {"StartState":"LEFT_THROW", "x":1150, "y" :850},
+
+	"lupin.099" : {"StartState":"LEFT_THROW", "x":950, "y" :950},
+	"lupin.109" : {"StartState":"LEFT_THROW", "x":1050, "y" :950},
+	"lupin.119" : {"StartState":"LEFT_THROW", "x":1150, "y" :950},
+
+	"lupin710." : {"StartState":"RIGHT_THROW", "x":750, "y" :1050},
+	"lupin.910." : {"StartState":"LEFT_THROW", "x":950, "y" :1050},
+	"lupin.1010." : {"StartState":"LEFT_THROW", "x":1050, "y" :1050},
+
+	"lupin011." : {"StartState":"RIGHT_THROW", "x":50, "y" :1150},
+	"lupin711." : {"StartState":"RIGHT_THROW", "x":750, "y" :1150},
+	"lupin.0911." : {"StartState":"LEFT_THROW", "x":950, "y" :1150},
+	"lupin.1111." : {"StartState":"LEFT_THROW", "x":1150, "y" :1150}
+
+
+
+
+}

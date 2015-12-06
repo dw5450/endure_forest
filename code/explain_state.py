@@ -140,14 +140,3 @@ def draw(frame_time):
     boy.draw()
 
     update_canvas()
-
-def main():
-    enter()
-
-    while True:
-        handle_events(frame_time)
-        update(frame_time)
-        draw(frame_time)
-
-if __name__ == '__main__':
-    main()

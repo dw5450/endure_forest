@@ -80,9 +80,9 @@ manifest_template = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 
 mygame = Target(
-    script="mygame.py", # path of the main script
+    script = "endure_forest.py",
     dest_base = "MyGame",
-    icon_resources=[(1, r"pico2d.ico")],
+    icon_resources = [(1, r"pico2d.ico")],
     other_resources = [(RT_MANIFEST, 1, (manifest_template % dict(prog="mygame", level="asInvoker")).encode("utf-8"))]
     )
 
@@ -95,11 +95,7 @@ py2exe_options = dict(
     )
 
 
-resources = "image_folder//banana.png image_folder//character_sprite.png image_folder//end.png \
-            image_folder//end_sign.png image_folder//lupin.png image_folder//map_background.png\
-            image_folder//map_object.png image_folder//portal.png image_folder//title.png\
-            data_folder//canvas_property.txt data_folder//footholds_data.txt\
-            data_folder//lupins_data.txt data_folder//ropes_data.txt".split()
+resources = "                       ".split()
 
 if platform.architecture()[0] == '32bit':
     sdl_folder = './SDL2/x86/'

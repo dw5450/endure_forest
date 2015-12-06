@@ -1,15 +1,14 @@
+
 import game_framework
 
 from pico2d import *
-
-import main_state
-import explain_state
-
 
 name = "TitleState"
 image = None
 title_sound =None
 global mouse_x, mouse_y
+
+import main_state
 
 
 def enter():
@@ -25,8 +24,6 @@ def exit():
     # fill here
     global image
     del(image)
-    close_canvas()
-    game_framework.quit()
 
 def pause():
     pass
@@ -40,18 +37,18 @@ def handle_events(frame_time):
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
-            exit()
+            game_framework.quit()
         elif(event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
-            exit()
+            game_framework.quit()
 
         elif event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
             if 370 < event.x and event.x < 460 and 190 < 600 - event.y and 600 - event.y < 230:
-                game_framework.push_state(main_state)
+                game_framework.change_state(main_state)
             elif 485 < event.x and event.x < 575 and 190 < 600 - event.y and 600 - event.y < 230:
-                game_framework.push_state(explain_state)
+                pass
+                #game_framework.run(main_state)
             elif 600 < event.x and event.x < 675 and 190 < 600 - event.y and 600 - event.y < 230:
-                exit()
-
+                game_framework.quit()
 
 
 def update(frame_time):
@@ -63,5 +60,21 @@ def draw(frame_time):
     image.draw(400, 300)
 
     update_canvas()
+
+
+def main():
+    enter()
+
+    while True:
+        handle_events(0)
+        update(0)
+        draw(0)
+
+if __name__ == '__main__':
+    main()
+
+
+
+
 
 
