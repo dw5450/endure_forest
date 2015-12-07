@@ -9,6 +9,7 @@ title_sound =None
 global mouse_x, mouse_y
 
 import main_state
+import explain_state
 
 
 def enter():
@@ -45,8 +46,7 @@ def handle_events(frame_time):
             if 370 < event.x and event.x < 460 and 190 < 600 - event.y and 600 - event.y < 230:
                 game_framework.change_state(main_state)
             elif 485 < event.x and event.x < 575 and 190 < 600 - event.y and 600 - event.y < 230:
-                pass
-                #game_framework.run(main_state)
+                game_framework.change_state(explain_state)
             elif 600 < event.x and event.x < 675 and 190 < 600 - event.y and 600 - event.y < 230:
                 game_framework.quit()
 
