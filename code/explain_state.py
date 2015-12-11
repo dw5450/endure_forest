@@ -9,7 +9,7 @@ title_sound =None
 global mouse_x, mouse_y
 
 import title_state
-#import explain_state2
+import explain2_state
 
 
 def enter():
@@ -18,7 +18,7 @@ def enter():
     image = load_image('image_folder//explain.PNG')                         #타이틀 이미지를 가져옴
     title_sound = load_music('sound_folder//Title.ogg')
     title_sound.set_volume(64)
-    title_sound.repeat_play()
+    #title_sound.repeat_play()
 
 def exit():
     # fill here
@@ -44,8 +44,7 @@ def handle_events(frame_time):
 
         elif event.type == SDL_MOUSEBUTTONDOWN and event.button == SDL_BUTTON_LEFT:
             if 585 < event.x and event.x < 800 and 55 < 600 - event.y and 600 - event.y < 110:
-                pass
-                #game_framework.change_state(explain_state2)
+                game_framework.push_state(explain2_state)
             elif 585 < event.x and event.x < 800 and 0 < 600 - event.y and 600 - event.y < 55:
                 game_framework.change_state(title_state)
 
@@ -58,7 +57,6 @@ def draw(frame_time):
     # fill here
     clear_canvas()
     image.draw(400, 300)
-    draw_rectangle(585, 55, 800, 110)
     update_canvas()
 
 
